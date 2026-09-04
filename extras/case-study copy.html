@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Financial Brand Design System | Case Study</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="case-study.css">
+</head>
+<body>
+
+  <!-- Floating Close/Back Button -->
+  <a href="index.html" class="close-btn" aria-label="Go back">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+    </svg>
+  </a>
+
+  <!-- Apple-Style Floating Glass Toggle -->
+  <div class="toggle-wrapper">
+    <div class="glass-toggle" id="view-toggle">
+      <div class="toggle-slider"></div>
+      <button class="toggle-btn active" data-target="detailed">Detailed</button>
+      <button class="toggle-btn" data-target="tldr">TL;DR</button>
+    </div>
+  </div>
+
+  <main class="case-study-container">
+    
+    <!-- Hero Image Placeholder -->
+    <!-- Rich Hero Banner -->
+    <div class="hero-image">
+      <div class="hero-content">
+        <!-- <svg class="hero-logo" width="40" height="40" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 2 H22 V22 L18.66 11 L15.33 22 L12 11 L8.66 22 L5.33 11 L2 22 Z" />
+        </svg> -->
+        <h1 class="hero-title">Design System</h1>
+        <p class="hero-subtitle">Building a design system for a global financial brand</p>
+        <div class="hero-divider"></div>
+      </div>
+    </div>
+
+    <div class="content-area">
+      
+      <!-- Detailed View -->
+      <article id="detailed" class="content-section active">
+        <h1>Building a scalable design system for a global financial brand</h1>
+        <p>Transforming Russell Investments' fragmented UI patterns into a scalable, accessible design system built to support global digital experiences, multiple markets and evolving business needs.</p>
+        
+        <div class="meta-grid">
+          <div class="meta-item">
+            <h4>My Role</h4>
+            <p>Senior UX Designer · Design System Lead</p>
+          </div>
+          <div class="meta-item">
+            <h4>Scope</h4>
+            <p>Global Design System · Web · Marketing · Accessibility</p>
+          </div>
+          <div class="meta-item">
+            <h4>Tools</h4>
+            <p>Figma · AEM · Sitecore · Ceros</p>
+          </div>
+          <div class="meta-item">
+            <h4>Timeline</h4>
+            <p>12+ months</p>
+          </div>
+        </div>
+
+        <p>I led the design-system initiative within the India UX team, establishing the foundations, components and interaction patterns needed to create a more consistent and scalable digital experience across Russell Investments. I worked across UX, Brand, Marketing, Accessibility, Development and global stakeholders to translate business and user requirements into reusable design patterns and system rules.</p>
+
+        <span class="section-title">The Problem</span>
+        <h2>Components existed. The rules didn't.</h2>
+        <p>Russell's digital ecosystem had accumulated reusable UI patterns over time, but many had evolved around individual page and business requirements rather than a shared system. Similar experiences could therefore require different design decisions, creating unnecessary variation and making the system harder to scale.</p>
+
+        <span class="section-title">01 — Rebuilding the Foundation</span>
+        <h2>Rebuilding the foundation before rebuilding the components</h2>
+        <p>Before expanding the component library, we established a shared visual foundation that could support the system consistently across experiences.</p>
+        <p>We deliberately reserved #165EDA as the system's activation colour. Rather than using blue simply as another brand colour, we used it to identify things users could interact with—links, buttons, active navigation, expandable states and interactive text. This turned colour into a functional part of the design system.</p>
+
+        <!-- DESIGN TOKENS SECTION -->
+        <div class="stage">
+          <span class="stage-label after">Color Tokens</span>
+          <p>The full palette — brand blues, a neutral grey ramp, and semantic pairings — checked for accessible foreground/background combinations before being handed off as tokens.</p>
+          <div class="after-panel tokens-panel">
+            
+            <div class="swatch-group">
+              <h3 class="panel-subheading" style="margin-top:0;">Main colours</h3>
+              <div class="swatch-row">
+                <div><div class="swatch" style="background:#1B4B93;"></div><div class="swatch-label">Primary</div></div>
+                <div><div class="swatch" style="background:#0B1F44;"></div><div class="swatch-label">Primary dark</div></div>
+                <div><div class="swatch" style="background:#5089BE;"></div><div class="swatch-label">Accent light</div></div>
+                <div><div class="swatch" style="background:#2C6E97;"></div><div class="swatch-label">Accent</div></div>
+              </div>
+            </div>
+
+            <div class="swatch-group">
+              <h3 class="panel-subheading">Greys</h3>
+              <div class="swatch-row">
+                <div><div class="swatch" style="background:#E8E4D3;"></div></div>
+                <div><div class="swatch" style="background:#E9E7DC;"></div></div>
+                <div><div class="swatch" style="background:#E1E0D0;"></div></div>
+                <div><div class="swatch" style="background:#D6D3C4;"></div></div>
+              </div>
+              <div class="swatch-row">
+                <div><div class="swatch" style="background:#C7C3B3;"></div></div>
+                <div><div class="swatch" style="background:#C6C4B7;"></div></div>
+                <div><div class="swatch" style="background:#8C8E7E;"></div></div>
+                <div><div class="swatch" style="background:#71715F;"></div></div>
+              </div>
+              <div class="swatch-row">
+                <div><div class="swatch" style="background:#3B3D33;"></div></div>
+                <div><div class="swatch" style="background:#20211D;"></div></div>
+                <div><div class="swatch" style="background:#1B1C18;"></div></div>
+                <div><div class="swatch" style="background:#0A0C0C;"></div></div>
+              </div>
+            </div>
+
+            <div class="swatch-group" style="margin-bottom:0;">
+              <h3 class="panel-subheading">Accessible pairings</h3>
+              <div class="pair-grid">
+                <div class="pair-item"><div class="id">A / B</div><div class="pair-swatch" style="background:linear-gradient(90deg,#ffffff 50%,#F5F5F3 50%);"></div></div>
+                <div class="pair-item"><div class="id">C / D</div><div class="pair-swatch" style="background:linear-gradient(90deg,#DCEAFB 50%,#F2F2F0 50%);"></div></div>
+                <div class="pair-item"><div class="id">G / H</div><div class="pair-swatch" style="background:linear-gradient(90deg,#0B1250 50%,#2E5FE0 50%);"></div></div>
+                <div class="pair-item"><div class="id">H / I</div><div class="pair-swatch" style="background:linear-gradient(90deg,#2E5FE0 50%,#B0521F 50%);"></div></div>
+                <div class="pair-item"><div class="id">J / K</div><div class="pair-swatch" style="background:linear-gradient(90deg,#0A0E3D 50%,#2E63E8 50%);"></div></div>
+                <div class="pair-item"><div class="id">K / L</div><div class="pair-swatch" style="background:linear-gradient(90deg,#2E63E8 50%,#C2681E 50%);"></div></div>
+                <div class="pair-item"><div class="id">M / N</div><div class="pair-swatch" style="background:linear-gradient(90deg,#7FA98B 50%,#1E7A3E 50%);"></div></div>
+                <div class="pair-item"><div class="id">O / P</div><div class="pair-swatch" style="background:linear-gradient(90deg,#C9A55A 50%,#C6871B 50%);"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage">
+          <span class="stage-label after">Typography Tokens</span>
+          <p>A single modular type scale for display, subheading, body, and button text — each with size, line-height, and weight specified so the same value is reused wherever that role appears.</p>
+          <div class="after-panel tokens-panel">
+            <div class="two-col">
+              <div>
+                <table class="token-table">
+                  <tr><th>Name</th><th>Weight</th><th>Size</th><th>Line ht.</th></tr>
+                  <tr><td class="type-sample h1">Heading 1</td><td class="num-val">Medium</td><td class="num-val">70</td><td class="num-val">84</td></tr>
+                  <tr><td class="type-sample h2">Heading 2</td><td class="num-val">Medium</td><td class="num-val">56</td><td class="num-val">67</td></tr>
+                  <tr><td class="type-sample h3">Heading 3</td><td class="num-val">Medium</td><td class="num-val">42</td><td class="num-val">50</td></tr>
+                  <tr><td class="type-sample h4">Heading 4</td><td class="num-val">Medium</td><td class="num-val">30</td><td class="num-val">36</td></tr>
+                  <tr><td class="type-sample sub">Subheading 1</td><td class="num-val">Semibold</td><td class="num-val">20</td><td class="num-val">24</td></tr>
+                  <tr><td class="type-sample sub" style="font-size:0.95rem;">Subheading 2</td><td class="num-val">Semibold</td><td class="num-val">16</td><td class="num-val">19</td></tr>
+                  <tr><td class="type-sample sub" style="font-size:0.8rem;">Subheading 3</td><td class="num-val">Semibold</td><td class="num-val">12</td><td class="num-val">15</td></tr>
+                  <tr><td class="type-sample" style="font-size:0.95rem;">Button</td><td class="num-val">Medium</td><td class="num-val">20</td><td class="num-val">24</td></tr>
+                </table>
+                <div class="responsive-table">
+                  <h4 class="panel-subheading" style="margin-top:0;">Recommended title responsive values</h4>
+                  <table class="token-table">
+                    <tr><th>Style</th><th>Desktop</th><th>Line ht.</th><th>Mobile</th><th>Line ht.</th></tr>
+                    <tr><td>Mega</td><td class="num-val">70px</td><td class="num-val">84px</td><td class="num-val">48px</td><td class="num-val">58px</td></tr>
+                    <tr><td>Kilo</td><td class="num-val">56px</td><td class="num-val">67px</td><td class="num-val">40px</td><td class="num-val">48px</td></tr>
+                    <tr><td>Alpha</td><td class="num-val">42px</td><td class="num-val">50px</td><td class="num-val">32px</td><td class="num-val">38px</td></tr>
+                  </table>
+                </div>
+              </div>
+              
+              <div>
+                <table class="token-table">
+                  <tr><th>Body text</th><th>&nbsp;</th></tr>
+                  <tr><td style="font-size:1rem;font-weight:600;">Body Regular XL</td><td></td></tr>
+                  <tr><td style="font-size:0.9rem;font-weight:600;">Body Regular L</td><td></td></tr>
+                  <tr><td style="font-size:0.85rem;">Body Regular M</td><td></td></tr>
+                  <tr><td style="font-size:0.75rem;">Body Regular S</td><td></td></tr>
+                  <tr><td style="font-size:0.7rem;color:var(--text-muted);">Body Regular XS</td><td></td></tr>
+                  <tr><td style="font-size:1rem;font-weight:700;">Body Bold XL</td><td></td></tr>
+                  <tr><td style="font-size:0.9rem;font-weight:700;">Body Bold L</td><td></td></tr>
+                  <tr><td style="font-size:0.85rem;font-weight:700;">Body Bold M</td><td></td></tr>
+                  <tr><td style="font-size:1rem;font-style:italic;">Body Italic XL</td><td></td></tr>
+                  <tr><td style="font-size:0.9rem;font-style:italic;">Body Italic L</td><td></td></tr>
+                </table>
+                <div class="responsive-table">
+                  <h4 class="panel-subheading" style="margin-top:0;">Recommended text roles</h4>
+                  <table class="token-table">
+                    <tr><th>Style</th></tr>
+                    <tr><td>XL</td></tr>
+                    <tr><td>L <span class="num-val" style="font-size:0.7rem;">(currently present)</span></td></tr>
+                    <tr><td>M</td></tr>
+                    <tr><td>S</td></tr>
+                    <tr><td>XS</td></tr>
+                    <tr><td>Kicker text</td></tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- END DESIGN TOKENS SECTION -->
+
+        <span class="section-title">02 — Designing One System</span>
+        <h2>One system across screens and markets</h2>
+        <p>The system needed to work across a global website ecosystem rather than a single product or screen size. We established a consistent 12 / 24 / 36 / 48 spacing scale and defined reusable layout behaviour for components across desktop, tablet and mobile experiences.</p>
+
+        <span class="section-title">03 — Buttons</span>
+        <h2>From visual variations to system rules</h2>
+        <p>The challenge wasn't simply to reduce the number of buttons. It was to establish a clear logic for why each treatment existed and when it should be used. We reframed the component around three decisions: Intent, Variant, and State. We moved from a library of visual options to a system of decisions.</p>
+
+        <!-- BUTTONS: BEFORE & AFTER CARDS -->
+        <div class="stage">
+          <span class="stage-label before">Before</span>
+          <p>An unmoderated states audit — rectangular corners, duplicated filled/outline pairs, and no naming convention tying a variant to when it should be used.</p>
+          <div class="before-panel">
+            <div class="audit-grid">
+              <div>
+                <div class="audit-col-head">Filled</div>
+                <div class="btn-sample filled" style="margin-bottom:10px;">Button</div>
+                <div class="btn-sample filled hover" style="margin-bottom:10px;">Button</div>
+                <div class="btn-sample filled" style="margin-bottom:10px;">Button</div>
+                <div class="btn-sample disabled">Button</div>
+              </div>
+              <div>
+                <div class="audit-col-head">Outline</div>
+                <div class="btn-sample outline" style="margin-bottom:10px;">Button</div>
+                <div class="btn-sample outline hover" style="margin-bottom:10px;">Button</div>
+                <div class="btn-sample outline" style="margin-bottom:10px;">Button</div>
+                <div class="btn-sample disabled">Button</div>
+              </div>
+              <div>
+                <div class="audit-col-head">Filled (dup.)</div>
+                <div class="btn-sample filled" style="margin-bottom:10px;">Button</div>
+                <div class="btn-sample filled hover" style="margin-bottom:10px;">Button</div>
+                <div class="btn-sample filled" style="margin-bottom:10px;">Button</div>
+                <div class="btn-sample disabled">Button</div>
+              </div>
+              <div>
+                <div class="audit-col-head">Outline (dup.)</div>
+                <div class="btn-sample outline" style="margin-bottom:10px;">Button</div>
+                <div class="btn-sample outline hover" style="margin-bottom:10px;">Button</div>
+                <div class="btn-sample outline" style="margin-bottom:10px;">Button</div>
+                <div class="btn-sample disabled">Button</div>
+              </div>
+              <div class="hide-mobile">
+                <div class="audit-col-head">Filled (v3)</div>
+                <div class="btn-sample filled" style="margin-bottom:10px;">Button</div>
+                <div class="btn-sample filled hover" style="margin-bottom:10px;">Button</div>
+                <div class="btn-sample filled" style="margin-bottom:10px;">Button</div>
+                <div class="btn-sample disabled">Button</div>
+              </div>
+              <div class="hide-mobile">
+                <div class="audit-col-head">Outline (v3)</div>
+                <div class="btn-sample outline" style="margin-bottom:10px;">Button</div>
+                <div class="btn-sample outline hover" style="margin-bottom:10px;">Button</div>
+                <div class="btn-sample outline" style="margin-bottom:10px;">Button</div>
+                <div class="btn-sample disabled">Button</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage">
+          <span class="stage-label after">After</span>
+          <p>Consolidated into three documented button types with a consistent pill shape and arrow icon, each paired with purpose, use cases, and do-not-use guidance so contributors apply them the same way every time.</p>
+          <div class="after-panel">
+            <h3 class="panel-heading">Authoring guidelines for buttons</h3>
+            
+            <h4 class="panel-subheading">Overview</h4>
+            <p class="panel-body">CTAs (Call to Action) guide users towards the next step.</p>
+
+            <h4 class="panel-subheading">Buttons</h4>
+            <p class="panel-body">To ensure consistency &amp; clarity, there are three button types:</p>
+
+            <div class="type-row">
+              <div class="type-name">Primary button (Filled)</div>
+              <div class="pill primary">Label <span>→</span></div>
+            </div>
+            <div class="type-row">
+              <div class="type-name">Secondary button (Outline)</div>
+              <div class="pill secondary">Label <span>→</span></div>
+            </div>
+            <div class="type-row">
+              <div class="type-name">Tertiary button (Text w/ icon)</div>
+              <div class="pill tertiary">Label <span class="dot">→</span></div>
+            </div>
+            <div class="type-row">
+              <div class="type-name">Text-only</div>
+              <div class="pill tertiary text-only">Label</div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="doc-block">
+              <div class="pill primary">Label <span>→</span></div>
+              <h3 style="margin:0; font-size:1rem; color:var(--text-main);">Primary button (Filled)</h3>
+            </div>
+            
+            <div class="doc-cols">
+              <div>
+                <h4 class="col-title">Purpose</h4>
+                <ul class="doc-list">
+                  <li>Use for the main action on a page or module.</li>
+                  <li>Should be the most visually prominent CTA.</li>
+                  <li>Only 1 primary CTA per screen is recommended.</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="col-title"><span class="tag ok">✓</span> Use cases</h4>
+                <ul class="doc-list">
+                  <li>Hero banners</li>
+                  <li>Submitting a form</li>
+                  <li>Any action the user should immediately take</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="col-title"><span class="tag no">✕</span> Do not use</h4>
+                <ul class="doc-list">
+                  <li>Less important tasks</li>
+                  <li>Multiple times in a page</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="caption">Recreated for portfolio presentation from the original Figma component set, Digital Design Ecosystem.</p>
+        <!-- END BUTTONS: BEFORE & AFTER CARDS -->
+
+        <span class="section-title">04 — One Component, Multiple Experiences</span>
+        <h2>Separating content from structure</h2>
+        <p>Rather than creating a new component for every content type, we defined a shared component structure that could adapt through controlled properties. By separating content requirements from component structure, we could create different experiences without creating a new component every time the content changed.</p>
+
+        <!-- Component Refinement Section -->
+        <span class="section-title">05 — Component Refinement</span>
+        <h2>Data display cards</h2>
+        
+        <div class="stage">
+          <span class="stage-label before">Before</span>
+          <p>The original component repeated one placeholder value across every instance, with no way to distinguish one metric from another. Hierarchy relied on a single orange rule, regardless of what the data meant.</p>
+          <div class="before-panel">
+            <div class="before-top before-card">
+              <p class="stat">29 years</p>
+              <p class="sub">in tax-managed equity investing</p>
+            </div>
+            <div class="before-row">
+              <div class="before-card"><p class="stat">29 years</p><p class="sub">in tax-managed equity investing</p></div>
+              <div class="before-card"><p class="stat">29 years</p><p class="sub">in tax-managed equity investing</p></div>
+              <div class="before-card"><p class="stat">29 years</p><p class="sub">in tax-managed equity investing</p></div>
+              <div class="before-card"><p class="stat">29 years</p><p class="sub">in tax-managed equity investing</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage">
+          <span class="stage-label after">After</span>
+          <p>Each card now carries its own color, icon-level visualization, and real content — so scale, geography, and tenure read as distinct facts at a glance, not repeats of the same one.</p>
+          <div class="after-grid">
+            <div class="after-card c1">
+              <p class="label">Global assets</p>
+              <p class="stat">$964B</p>
+              <p class="desc">We partner with clients to deliver tailored advice globally.</p>
+              <div class="visual bars">
+                <i style="height:30%"></i><i style="height:45%"></i><i style="height:40%"></i><i style="height:70%"></i><i style="height:100%"></i>
+              </div>
+            </div>
+            <div class="after-card c2">
+              <p class="label">Under management</p>
+              <p class="stat">$418B</p>
+              <p class="desc">Our expertise helps clients achieve long-term goals.</p>
+              <div class="visual dots" id="dots1"></div>
+            </div>
+            <div class="after-card c3">
+              <p class="label">Assets traded</p>
+              <p class="stat">$2.0T</p>
+              <p class="desc">Execution excellence across global markets.</p>
+              <div class="visual grad-block"><span></span><span></span></div>
+            </div>
+            <div class="after-card c4">
+              <p class="label">Serving clients in</p>
+              <p class="stat">31 countries</p>
+              <p class="desc">Delivering local insight with world-class capabilities.</p>
+              <div class="visual line-dots">
+                <i style="width:4px;height:4px;"></i><i style="width:6px;height:6px;"></i><i style="width:8px;height:8px;"></i><i style="width:11px;height:11px;"></i><i style="width:14px;height:14px;"></i><i style="width:18px;height:18px;"></i>
+              </div>
+            </div>
+            <div class="after-card c5">
+              <p class="label">Manager products</p>
+              <p class="stat">15k+</p>
+              <p class="desc">A diverse range of investment solutions.</p>
+              <div class="visual dots" id="dots2"></div>
+            </div>
+            <div class="after-card c6">
+              <p class="label">In business since</p>
+              <p class="stat">90 years</p>
+              <p class="desc">Nine decades of innovation and client commitment.</p>
+              <div class="visual grid-pattern" id="grid1"></div>
+            </div>
+          </div>
+        </div>
+
+        <span class="section-title">06 — Accessibility</span>
+        <h2>Accessibility became part of the system</h2>
+        <p>Accessibility wasn't treated as a final quality check. It became part of how components and experiences were designed from the beginning. By building accessibility into reusable components, every subsequent experience started from a stronger baseline.</p>
+
+        <span class="section-title">07 — Governance</span>
+        <h2>A design system isn't finished when published</h2>
+        <p>As new requirements emerged, the system needed a mechanism for deciding what should be added, changed or rejected. We established recurring UX Open Houses as a forum for designers to bring new requirements, explore patterns and align on system decisions.</p>
+
+        <span class="section-title">Outcome</span>
+        <h2>A system designed to scale, not just standardise</h2>
+        <p>The result was a more scalable foundation for design and implementation, stronger accessibility practices and a shared visual language that extended beyond UX into marketing and brand experiences.</p>
+        <p><strong>The goal wasn't to build 50 components. It was to make the 51st easier to build well.</strong></p>
+      </article>
+
+      <!-- TL;DR View -->
+      <article id="tldr" class="content-section">
+        <h1>Design System: The Short Version</h1>
+        <ul class="tldr-list">
+          <li><strong>The Problem:</strong> Russell Investments' digital ecosystem had accumulated fragmented UI patterns over time, lacking shared rules, responsive consistency, and embedded accessibility.</li>
+          <li><strong>The Solution:</strong> Instead of adding more components, we paused to establish core foundations (typography, spacing, activation colors) and rebuilt the system around intentional design decisions rather than visual options.</li>
+          <li><strong>Governance:</strong> Established recurring UX Open Houses to create a continuous feedback loop, turning the design system from a static library into a living product.</li>
+        </ul>
+
+        <div class="impact-grid">
+          <div class="impact-card">
+            <h3>10–12 → 50+</h3>
+            <p>Components expanded into a governed design system.</p>
+          </div>
+          <div class="impact-card">
+            <h3>13–14</h3>
+            <p>Global markets supported by the shared design foundation.</p>
+          </div>
+          <div class="impact-card">
+            <h3>70 → 80</h3>
+            <p>Accessibility score improvement through embedded component design.</p>
+          </div>
+          <div class="impact-card">
+            <h3>UX → Brand</h3>
+            <p>The system expanded beyond UX into Marketing and broader brand communications.</p>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <script>
+    // Toggle Logic
+    const toggleContainer = document.getElementById('view-toggle');
+    const btns = document.querySelectorAll('.toggle-btn');
+    const sections = document.querySelectorAll('.content-section');
+
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        if(btn.dataset.target === 'tldr') {
+          toggleContainer.classList.add('tldr-active');
+        } else {
+          toggleContainer.classList.remove('tldr-active');
+        }
+
+        sections.forEach(sec => {
+          sec.classList.remove('active');
+          if(sec.id === btn.dataset.target) {
+            setTimeout(() => sec.classList.add('active'), 20);
+          }
+        });
+      });
+    });
+
+    // Visual Generators
+    function fillDots(id, total, litRatio){
+      const el = document.getElementById(id);
+      if(!el) return;
+      for(let i=0; i<total; i++){
+        const d = document.createElement('i');
+        if(i > total * litRatio) d.className = 'dim';
+        el.appendChild(d);
+      }
+    }
+    fillDots('dots1', 27, 0.55);
+    fillDots('dots2', 27, 0.4);
+
+    function fillGrid(id, total, litRatio){
+      const el = document.getElementById(id);
+      if(!el) return;
+      for(let i=0; i<total; i++){
+        const d = document.createElement('i');
+        if(Math.random() < litRatio) d.classList.add('on');
+        el.appendChild(d);
+      }
+    }
+    fillGrid('grid1', 27, 0.55);
+  </script>
+</body>
+</html>

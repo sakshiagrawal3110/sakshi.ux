@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sakshi | UX Designer Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ==========================================================================
+       1. GLOBAL DESIGN SYSTEM & THEME
+       ========================================================================== */
+    :root {
+      --bg-color: #F4F2ED;
+      --card-bg: #ffffff;
+      --text-main: #18181b;
+      --text-muted: #71717a;
+      --border-color: rgba(0, 0, 0, 0.05);
+      --icon-bg: #f4f4f5;
+      --radius: 32px;
+      
+      --spring-easing: cubic-bezier(0.16, 1, 0.3, 1);
+      --transition: all 0.4s var(--spring-easing);
+      
+      --cursor-default: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.65 2.15c-.25-.25-.65-.07-.65.28v18.08c0 .39.48.56.73.26l4.07-4.91c.11-.14.28-.22.45-.22h6.64c.38 0 .55-.47.27-.75L5.65 2.15z' fill='%2318181b' stroke='%23ffffff' stroke-width='1.5'/%3E%3C/svg%3E") 4 4, auto;
+      --cursor-text: url("data:image/svg+xml,%3Csvg width='12' height='24' viewBox='0 0 12 24' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='5' y='3' width='1.5' height='18' fill='%2318181b'/%3E%3C/svg%3E") 6 12, text;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --card-bg: #1C1C1E;
+      --text-main: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --border-color: rgba(255, 255, 255, 0.06);
+      --icon-bg: #2C2C2E;
+      
+      --cursor-default: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.65 2.15c-.25-.25-.65-.07-.65.28v18.08c0 .39.48.56.73.26l4.07-4.91c.11-.14.28-.22.45-.22h6.64c.38 0 .55-.47.27-.75L5.65 2.15z' fill='%23f4f4f5' stroke='%2318181b' stroke-width='1.5'/%3E%3C/svg%3E") 4 4, auto;
+      --cursor-text: url("data:image/svg+xml,%3Csvg width='12' height='24' viewBox='0 0 12 24' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='5' y='3' width='1.5' height='18' fill='%23f4f4f5'/%3E%3C/svg%3E") 6 12, text;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; cursor: var(--cursor-default); }
+    html, body { cursor: var(--cursor-default); }
+    h1, h2, h3, h4, h5, h6, p, span, li, input, textarea { cursor: var(--cursor-text); }
+    a, button, .tooltip-trigger, .theme-toggle { cursor: pointer !important; text-decoration: none; color: inherit; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 7rem 2rem 5rem;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      transition: background-color 0.4s ease;
+      overflow-x: hidden;
+    }
+
+    /* ==========================================================================
+       2. APPLE-STYLE FLOATING GLASS NAV (MATCHES TL;DR BUTTON)
+       ========================================================================== */
+    .nav-wrapper {
+      position: fixed;
+      top: 1.75rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .glass-nav {
+      pointer-events: auto;
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      border-radius: 99px;
+      padding: 5px;
+      box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.08), 
+        0 1px 3px rgba(0, 0, 0, 0.04),
+        inset 0 1px 1px rgba(255, 255, 255, 1);
+    }
+
+    [data-theme="dark"] .glass-nav {
+      background: rgba(30, 30, 30, 0.55);
+      border-color: rgba(255, 255, 255, 0.18);
+      box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.36),
+        0 1px 3px rgba(0, 0, 0, 0.2),
+        inset 0 1px 1px rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-slider {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      height: calc(100% - 10px);
+      background: #ffffff;
+      border-radius: 99px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+      z-index: 1;
+    }
+
+    [data-theme="dark"] .nav-slider {
+      background: rgba(82, 91, 108, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+    }
+
+    .nav-btn {
+      position: relative;
+      z-index: 2;
+      background: none;
+      border: none;
+      padding: 8px 24px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .nav-btn.active {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    /* --- Floating Custom Tooltip --- */
+    .custom-tooltip {
+      position: fixed; top: 0; left: 0;
+      background-color: #0E7C6E;
+      color: white;
+      padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600;
+      pointer-events: none; opacity: 0; z-index: 9999;
+      transition: opacity 0.2s ease; white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(14, 124, 110, 0.25);
+    }
+
+    /* ==========================================================================
+       3. BENTO GRID ARCHITECTURE
+       ========================================================================== */
+    .bento-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: 195px; /* Scaled down for balanced proportions */
+      grid-auto-flow: dense;
+      gap: 1.25rem;
+      width: 100%;
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .span-1 { grid-column: span 1; }
+    .span-2 { grid-column: span 2; }
+    .span-4 { grid-column: span 4; }
+    .row-1 { grid-row: span 1; }
+    .row-2 { grid-row: span 2; }
+
+    /* Base Card Physics & Click Animations */
+    .bento-card {
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+      transition: var(--transition);
+      will-change: transform, box-shadow;
+      user-select: none;
+    }
+
+    .bento-card:hover {
+      transform: scale(1.015) translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.07);
+      border-color: transparent;
+      z-index: 5;
+    }
+
+    /* Tactile Squish on Click */
+    .bento-card:active {
+      transform: scale(0.97) !important;
+      transition: transform 0.1s ease !important;
+    }
+
+    .bento-card.hidden { display: none !important; }
+
+    /* ==========================================================================
+       4. COMPONENT CARD SPECIFICS
+       ========================================================================== */
+    
+    /* Hero Card (2x1) */
+    .hero {
+      flex-direction: row;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 2rem;
+    }
+    .hero-avatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      flex-shrink: 0;
+    }
+    .hero-text h1 { font-size: 1.35rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .hero-text p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.45; }
+
+    /* 1x1 Utility Tiles */
+    .icon-tile {
+      align-items: center;
+      text-align: center;
+      padding: 1.5rem;
+    }
+    .icon-tile svg {
+      width: 52px;
+      height: 52px;
+      transition: transform 0.4s var(--spring-easing);
+    }
+    .icon-tile:hover svg {
+      transform: scale(1.15) translateY(-2px);
+    }
+
+    /* Resume Card */
+    .resume-tile {
+      align-items: center;
+      text-align: center;
+      gap: 8px;
+    }
+    .resume-tile svg {
+      color: var(--text-main);
+      width: 36px;
+      height: 36px;
+      transition: transform 0.4s var(--spring-easing);
+    }
+    .resume-tile:hover svg {
+      transform: translateY(-2px);
+    }
+    .resume-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* Theme Toggle */
+    .theme-toggle:hover svg {
+      transform: rotate(15deg) scale(1.15);
+    }
+
+    /* Philosophy Quote Card (2x1) */
+    .philosophy {
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+      cursor: pointer;
+    }
+    .philosophy .quote {
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+    }
+    .label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    /* ==========================================================================
+       5. 2x2 PROJECT TILES (BALANCED & PROPORTIONAL)
+       ========================================================================== */
+    .cs-badge {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      z-index: 10;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 10px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .project-center {
+      text-align: center;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+    }
+
+    .project-title {
+      font-family: 'Inter', -apple-system, sans-serif;
+      font-weight: 800;
+      font-size: 1.85rem;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    .project-subtitle {
+      font-size: 0.85rem;
+      margin-top: 0.65rem;
+      font-weight: 400;
+      opacity: 0.85;
+      max-width: 280px;
+      line-height: 1.4;
+    }
+
+    /* Animations */
+    @keyframes float-up-down {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0); }
+    }
+    .float-slow { animation: float-up-down 4s ease-in-out infinite; }
+    .float-med { animation: float-up-down 3s ease-in-out infinite reverse; }
+    .float-fast { animation: float-up-down 2.5s ease-in-out infinite; }
+
+    /* Agentic Card (Orange) */
+    .agentic-card {
+      padding: 0 !important;
+      background: linear-gradient(135deg, #df785c, #cb5443) !important;
+      color: white;
+    }
+    .agentic-card .cs-badge {
+      background: rgba(255,255,255,0.25);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    .agentic-icons {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 16px;
+    }
+    .i-figma { width: 30px; height: 45px; }
+    .i-gpt { width: 44px; height: 44px; border-radius: 10px; }
+    .i-ps { width: 42px; height: 42px; }
+    .agentic-logo-text {
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: 900;
+      font-size: 2rem;
+      line-height: 1.05;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+    }
+    .agentic-card .token {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 20px;
+      pointer-events: none;
+      backdrop-filter: blur(4px);
+    }
+    .agentic-card .t-1 { top: 12%; left: 8%; transform: rotate(-6deg); }
+    .agentic-card .t-2 { top: 22%; right: 6%; transform: rotate(10deg); }
+    .agentic-card .t-3 { bottom: 20%; left: 6%; transform: rotate(6deg); }
+    .agentic-card .t-4 { bottom: 12%; right: 8%; transform: rotate(-4deg); }
+
+    /* Trust Card (Deep Blue) */
+    .trust-card {
+      padding: 0 !important;
+      background: linear-gradient(135deg, #0F1E3D, #1B3F91) !important;
+      color: white;
+    }
+    .trust-card .cs-badge {
+      background: rgba(255,255,255,0.1);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .trust-icon { position: absolute; opacity: 0.85; }
+    .tr-1 { top: 16%; left: 10%; }
+    .tr-2 { top: 18%; right: 12%; }
+    .tr-3 { bottom: 16%; right: 10%; }
+
+    /* Clinical Card (Teal) */
+    .clinical-card {
+      padding: 0 !important;
+      background: linear-gradient(135deg, #0A5A50, #0E7C6E) !important;
+      color: white;
+    }
+    .clinical-card .cs-badge {
+      background: rgba(255,255,255,0.15);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+    .cl-1 { top: 16%; left: 10%; }
+    .cl-2 { top: 20%; right: 12%; }
+    .cl-3 { bottom: 16%; right: 10%; opacity: 0.7; }
+
+    /* Research Card (Stone/Paper) */
+    .research-card {
+      padding: 0 !important;
+      background: linear-gradient(135deg, #f8f7f3, #e8e6e0) !important;
+      color: #2a2926;
+    }
+    .research-card .cs-badge {
+      background: rgba(0,0,0,0.04);
+      color: #2a2926;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+    .r-1 { top: 14%; left: 8%; opacity: 0.25; }
+    .r-2 { bottom: 16%; right: 10%; opacity: 0.4; }
+    [data-theme="dark"] .research-card {
+      background: linear-gradient(135deg, #2a2926, #1c1b19) !important;
+      color: #f2f0eb;
+    }
+    [data-theme="dark"] .research-card .cs-badge {
+      background: rgba(255,255,255,0.05);
+      color: #f2f0eb;
+      border-color: rgba(255,255,255,0.1);
+    }
+    [data-theme="dark"] .r-1, [data-theme="dark"] .r-2 {
+      stroke: #f2f0eb;
+      opacity: 0.2;
+    }
+
+    /* Toolkit Banner (4x1) */
+    .tools {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2.5rem;
+      cursor: pointer;
+    }
+    .tools .label { font-size: 0.8rem; margin: 0; }
+    .tools .tool-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      list-style: none;
+    }
+    .tools .tool-list li {
+      background: var(--icon-bg);
+      padding: 8px 18px;
+      border-radius: 99px;
+      border: 1px solid var(--border-color);
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-main);
+    }
+
+    /* ==========================================================================
+       6. MODALS
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.45); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; z-index: 10000;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    
+    .modal-content {
+      background: var(--card-bg); border-radius: 28px; padding: 3rem;
+      max-width: 600px; width: 90%; border: 1px solid var(--border-color);
+      transform: scale(0.95) translateY(15px); transition: transform 0.3s var(--spring-easing);
+      position: relative; box-shadow: 0 24px 48px rgba(0,0,0,0.15);
+    }
+    .modal-overlay.active .modal-content { transform: scale(1) translateY(0); }
+    
+    .modal-close {
+      position: absolute; top: 1.5rem; right: 1.5rem; width: 36px; height: 36px;
+      background: var(--icon-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted); cursor: pointer; transition: var(--transition);
+      border: none;
+    }
+    .modal-close:hover { color: var(--text-main); transform: rotate(90deg); }
+
+    .modal-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-main); }
+    .modal-body { font-size: 1.05rem; color: var(--text-muted); line-height: 1.7; }
+    
+    .skills-group { margin-bottom: 1.5rem; }
+    .skills-group h4 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-main); margin-bottom: 0.5rem; }
+    .skills-list { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; }
+    .skills-list li { background: var(--icon-bg); padding: 6px 14px; border-radius: 10px; font-size: 0.85rem; color: var(--text-main); font-weight: 500; border: 1px solid var(--border-color); }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .bento-container { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 200px; }
+      .tools { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    }
+
+    @media (max-width: 640px) {
+      body { padding: 6rem 1rem 3rem; }
+      .bento-container { grid-template-columns: 1fr; grid-auto-rows: auto; }
+      .bento-card { grid-column: span 1 !important; grid-row: span 1 !important; min-height: 220px; }
+      .hero { flex-direction: column; align-items: center; text-align: center; gap: 1rem; padding: 2rem 1.5rem; }
+      .tools .tool-list { display: none; }
+      .token, .trust-icon { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="custom-tooltip" class="custom-tooltip"></div>
+
+  <!-- Apple-Style Floating Nav (All, About, Work) -->
+  <div class="nav-wrapper">
+    <nav class="glass-nav">
+      <div class="nav-slider" id="navSlider"></div>
+      <button class="nav-btn active" data-filter="all">All</button>
+      <button class="nav-btn" data-filter="about">About</button>
+      <button class="nav-btn" data-filter="work">Work</button>
+    </nav>
+  </div>
+
+  <main class="bento-container">
+    
+    <!-- ROW 1 -->
+    <!-- 1. Hero / Intro (About) -->
+    <div class="bento-card hero span-2 row-1 tooltip-trigger" data-category="about" data-tooltip="That's me!">
+      <img src="https://avatars.githubusercontent.com/u/285936886?v=4" alt="Sakshi" class="hero-avatar">
+      <div class="hero-text">
+        <h1>Heyyy 👋</h1>
+        <p>I'm Sakshi, currently working as a Product Designer focused on crafting intuitive digital experiences and scalable design systems.</p>
+      </div>
+    </div>
+
+    <!-- 2. Gmail Tile (About) -->
+    <a href="mailto:hello@example.com" class="bento-card icon-tile span-1 row-1 tooltip-trigger" data-category="about" data-tooltip="Say hello">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22 6C22 4.9 21.1 4 20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6ZM20 6L12 11L4 6H20ZM20 18H4V8L12 13L20 8V18Z" fill="#EA4335"/>
+      </svg>
+    </a>
+
+    <!-- 3. LinkedIn Tile (About) -->
+    <a href="https://linkedin.com/in/sakshiagrawalll" target="_blank" rel="noopener noreferrer" class="bento-card icon-tile span-1 row-1 tooltip-trigger" data-category="about" data-tooltip="Connect on LinkedIn">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19 0H5C2.23858 0 0 2.23858 0 5V19C0 21.7614 2.23858 24 5 24H19C21.7614 24 24 21.7614 24 19V5C24 2.23858 21.7614 0 19 0ZM7.118 20.452H3.555V8.995H7.118V20.452ZM5.337 7.433C4.192 7.433 3.272 6.512 3.272 5.37C3.272 4.227 4.192 3.307 5.337 3.307C6.478 3.307 7.4 4.227 7.4 5.37C7.399 6.512 6.478 7.433 5.337 7.433ZM20.45 20.452H16.888V14.88C16.888 13.552 16.862 11.843 15.093 11.843C13.298 11.843 13.023 13.243 13.023 14.782V20.452H9.462V8.995H12.883V10.563H12.93C13.409 9.655 14.582 8.7 16.326 8.7C19.958 8.7 20.45 11.089 20.45 14.194V20.452Z" fill="#0A66C2"/>
+      </svg>
+    </a>
+
+    <!-- ROW 2 -->
+    <!-- 4. Theme Toggle (About) -->
+    <div class="bento-card theme-toggle icon-tile span-1 row-1 tooltip-trigger" id="theme-toggle" data-category="about" data-tooltip="Toggle dark mode">
+      <div class="theme-icon" id="theme-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5" fill="#F59E0B"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line>
+        </svg>
+      </div>
+    </div>
+
+    <!-- 5. Resume Download Tile (About) -->
+    <a href="assets/SakshiAgrwalResume.pdf" download="Sakshi_Agrawal_Resume.pdf" class="bento-card resume-tile icon-tile span-1 row-1 tooltip-trigger" data-category="about" data-tooltip="Download Resume (PDF)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+        <polyline points="14 2 14 8 20 8"></polyline>
+        <line x1="12" y1="18" x2="12" y2="12"></line>
+        <polyline points="9 15 12 18 15 15"></polyline>
+      </svg>
+      <span class="resume-badge">Resume</span>
+    </a>
+
+    <!-- 6. Philosophy Modal Trigger (About) -->
+    <div class="bento-card philosophy span-2 row-1 tooltip-trigger" onclick="openModal('principleModal')" data-category="about" data-tooltip="Read principle">
+      <p class="quote">"Great UX is to make users feel in control."</p>
+      <span class="label">My Design Principle</span>
+    </div>
+
+    <!-- ROW 3 & 4 (THE PROJECTS) -->
+    <!-- 7. Agentic Design System (Work) -->
+    <a href="case-study.html" class="bento-card agentic-card span-2 row-2 tooltip-trigger" data-category="work" data-tooltip="View case study">
+      <div class="cs-badge">Design System</div>
+      <div class="token t-1 float-slow">◆ spacing.24</div>
+      <div class="token t-2 float-med">● color.surface</div>
+      <div class="token t-3 float-fast">radius.md</div>
+      <div class="token t-4 float-slow">shadow.xs</div>
+      <div class="project-center">
+        <div class="agentic-icons">
+          <svg class="i-figma float-icon" viewBox="0 0 38 57" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 19C9.5 13.7533 13.7533 9.5 19 9.5C19 4.2467 14.7533 0 9.5 0C4.2467 0 0 4.2467 0 9.5C0 14.7533 4.2467 19 9.5 19Z" fill="#F24E1E"/><path d="M28.5 19C33.7533 19 38 14.7533 38 9.5C38 4.2467 33.7533 0 28.5 0C23.2467 0 19 4.2467 19 9.5C19 14.7533 23.2467 19 28.5 19Z" fill="#FF7262"/><path d="M9.5 38C9.5 32.7533 13.7533 28.5 19 28.5C19 23.2467 14.7533 19 9.5 19C4.2467 19 0 23.2467 0 28.5C0 33.7533 4.2467 38 9.5 38Z" fill="#A259FF"/><path d="M28.5 38C33.7533 38 38 33.7533 38 28.5C38 23.2467 33.7533 19 28.5 19C23.2467 19 19 23.2467 19 28.5C19 33.7533 23.2467 38 28.5 38Z" fill="#1ABC9C"/><path d="M9.5 57C4.2467 57 0 52.7533 0 47.5C0 42.2467 4.2467 38 9.5 38C14.7533 38 19 42.2467 19 47.5C19 52.7533 14.7533 57 9.5 57Z" fill="#0ACF83"/></svg>
+          <svg class="i-gpt float-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 509.639"><path fill="#fff" d="M115.612 0h280.775C459.974 0 512 52.026 512 115.612v278.415c0 63.587-52.026 115.613-115.613 115.613H115.612C52.026 509.64 0 457.614 0 394.027V115.612C0 52.026 52.026 0 115.612 0z"/><path fill="#18181b" fill-rule="nonzero" d="M412.037 221.764a90.834 90.834 0 004.648-28.67 90.79 90.79 0 00-12.443-45.87c-16.37-28.496-46.738-46.089-79.605-46.089-6.466 0-12.943.683-19.264 2.04a90.765 90.765 0 00-67.881-30.515h-.576c-.059.002-.149.002-.216.002-39.807 0-75.108 25.686-87.346 63.554-25.626 5.239-47.748 21.31-60.682 44.03a91.873 91.873 0 00-12.407 46.077 91.833 91.833 0 0023.694 61.553 90.802 90.802 0 00-4.649 28.67 90.804 90.804 0 0012.442 45.87c16.369 28.504 46.74 46.087 79.61 46.087a91.81 91.81 0 0019.253-2.04 90.783 90.783 0 0067.887 30.516h.576l.234-.001c39.829 0 75.119-25.686 87.357-63.588 25.626-5.242 47.748-21.312 60.682-44.033a91.718 91.718 0 0012.383-46.035 91.83 91.83 0 00-23.693-61.553l-.004-.005zM275.102 413.161h-.094a68.146 68.146 0 01-43.611-15.8 56.936 56.936 0 002.155-1.221l72.54-41.901a11.799 11.799 0 005.962-10.251V241.651l30.661 17.704c.326.163.55.479.596.84v84.693c-.042 37.653-30.554 68.198-68.21 68.273h.001zm-146.689-62.649a68.128 68.128 0 01-9.152-34.085c0-3.904.341-7.817 1.005-11.663.539.323 1.48.897 2.155 1.285l72.54 41.901a11.832 11.832 0 0011.918-.002l88.563-51.137v35.408a1.1 1.1 0 01-.438.94l-73.33 42.339a68.43 68.43 0 01-34.11 9.12 68.359 68.359 0 01-59.15-34.11l-.001.004zm-19.083-158.36a68.044 68.044 0 0135.538-29.934c0 .625-.036 1.731-.036 2.5v83.801l-.001.07a11.79 11.79 0 005.954 10.242l88.564 51.13-30.661 17.704a1.096 1.096 0 01-1.034.093l-73.337-42.375a68.36 68.36 0 01-34.095-59.143 68.412 68.412 0 019.112-34.085l-.004-.003zm251.907 58.621l-88.563-51.137 30.661-17.697a1.097 1.097 0 011.034-.094l73.337 42.339c21.109 12.195 34.132 34.746 34.132 59.132 0 28.604-17.849 54.199-44.686 64.078v-86.308c.004-.032.004-.065.004-.096 0-4.219-2.261-8.119-5.919-10.217zm30.518-45.93c-.539-.331-1.48-.898-2.155-1.286l-72.54-41.901a11.842 11.842 0 00-5.958-1.611c-2.092 0-4.15.558-5.957 1.611l-88.564 51.137v-35.408l-.001-.061a1.1 1.1 0 01.44-.88l73.33-42.303a68.301 68.301 0 0134.108-9.129c37.704 0 68.281 30.577 68.281 68.281a68.69 68.69 0 01-.984 11.545v.005zm-191.843 63.109l-30.668-17.704a1.09 1.09 0 01-.596-.84v-84.692c.016-37.685 30.593-68.236 68.281-68.236a68.332 68.332 0 0143.689 15.804 63.09 63.09 0 00-2.155 1.222l-72.54 41.9a11.794 11.794 0 00-5.961 10.248v.068l-.05 102.23zm16.655-35.91l39.445-22.782 39.444 22.767v45.55l-39.444 22.767-39.445-22.767v-45.535z"/></svg>
+          <svg class="i-ps float-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 511.76 498.97"><defs><style>.ps-bg{fill:#001e36;}.ps-txt{fill:#31a8ff;}</style></defs><rect class="ps-bg" width="511.76" height="498.97" rx="90.62"/><path class="ps-txt" d="M115.24,349.91V130.53c0-1.59.68-2.4,2.06-2.4,3.65,0,7,0,12-.17s10.47-.23,16.31-.34l18.54-.35q9.78-.17,19.39-.17,26.09,0,44,6.52a76.4,76.4,0,0,1,28.66,17.51,67.06,67.06,0,0,1,15.62,24.21A80.31,80.31,0,0,1,276.61,203q0,27.48-12.7,45.32a71.82,71.82,0,0,1-34.33,25.92c-14.42,5.38-30.45,7.2-48.07,7.2-5,0-8.58-.05-10.64-.17s-5.15-.17-9.27-.17v68.49a2.72,2.72,0,0,1-2.32,3.09,2.49,2.49,0,0,1-.77,0H117.64C116,352.65,115.24,351.74,115.24,349.91ZM161.6,169.33v71.55q4.46.35,8.24.34h11.33a80.56,80.56,0,0,0,24.55-3.92A37,37,0,0,0,223.23,226q6.69-7.89,6.69-22a34.74,34.74,0,0,0-5-18.88A32,32,0,0,0,210,172.93,63.68,63.68,0,0,0,185,168.64q-8.25,0-14.59.17t-8.76.52Z"/><path class="ps-txt" d="M409.35,227.87a80,80,0,0,0-20.43-7.21,108.28,108.28,0,0,0-23.86-2.75,44.38,44.38,0,0,0-12.87,1.55,11.55,11.55,0,0,0-6.7,4.29,10.79,10.79,0,0,0-1.71,5.84,9.08,9.08,0,0,0,2.06,5.49,23.25,23.25,0,0,0,7.21,5.66,141.8,141.8,0,0,0,15.1,7,150,150,0,0,1,32.79,15.62,50,50,0,0,1,16.82,17.68,47.17,47.17,0,0,1,5,22,49.41,49.41,0,0,1-8.24,28.33,54.23,54.23,0,0,1-23.86,19.05Q375,357.3,352,357.3a140.51,140.51,0,0,1-29-2.75,92.44,92.44,0,0,1-21.8-6.87,4.44,4.44,0,0,1-2.41-4.12V306.49a2,2,0,0,1,.86-1.89,1.66,1.66,0,0,1,1.89.17A91.62,91.62,0,0,0,328,315.24a108.66,108.66,0,0,0,25.07,3.26q12,0,17.68-3.09a9.7,9.7,0,0,0,5.66-8.92q0-4.47-5.15-8.59T350.3,288a126.06,126.06,0,0,1-30.38-15.45,52.42,52.42,0,0,1-16.14-18,47.35,47.35,0,0,1-5-21.8A49.21,49.21,0,0,1,306,206.93a52.37,52.37,0,0,1,22.32-19.57q15.1-7.55,37.76-7.55a167.13,167.13,0,0,1,26.44,1.88,69.58,69.58,0,0,1,18.4,5,3.13,3.13,0,0,1,2.06,1.89,9.31,9.31,0,0,1,.34,2.57v34.68a2.3,2.3,0,0,1-1,2.06A3.33,3.33,0,0,1,409.35,227.87Z"/></svg>
+        </div>
+        <div class="agentic-logo-text">Agentic<br>Design System</div>
+      </div>
+    </a>
+
+    <!-- 8. Investment Intelligence (Work) -->
+    <a href="trust-case-study.html" class="bento-card trust-card span-2 row-2 tooltip-trigger" data-category="work" data-tooltip="View case study">
+      <div class="cs-badge">Confidential Project</div>
+      <svg class="trust-icon tr-1 float-slow" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+      <svg class="trust-icon tr-2 float-fast" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12c-4 0-9-1-9-9 0 8-5 9-9 9 4 0 9 1 9 9 0-8 5-9 9-9Z"></path></svg>
+      <svg class="trust-icon tr-3 float-med" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+      <div class="project-center">
+        <h2 class="project-title">Investment<br>Intelligence</h2>
+        <p class="project-subtitle">Designing trust in the age of AI.</p>
+      </div>
+    </a>
+
+    <!-- ROW 5 & 6 -->
+    <!-- 9. Clinical AI Assistant (Work) -->
+    <a href="ai-case-study.html" class="bento-card clinical-card span-2 row-2 tooltip-trigger" data-category="work" data-tooltip="View case study">
+      <div class="cs-badge">Healthcare AI</div>
+      <svg class="trust-icon cl-1 float-slow" width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+      <svg class="trust-icon cl-2 float-fast" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#A7F3D0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12c-4 0-9-1-9-9 0 8-5 9-9 9 4 0 9 1 9 9 0-8 5-9 9-9Z"></path></svg>
+      <svg class="trust-icon cl-3 float-med" width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg> 
+      <div class="project-center">
+        <h2 class="project-title">Clinical AI<br>Assistant</h2>
+        <p class="project-subtitle">Reducing documentation without removing control.</p>
+      </div>
+    </a>
+
+    <!-- 10. AI Trust & Human Control (Work) -->
+    <a href="research-case-study.html" class="bento-card research-card span-2 row-2 tooltip-trigger" data-category="work" data-tooltip="View research study">
+      <div class="cs-badge">UX Research</div>
+      <svg class="trust-icon r-1 float-slow" width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#2a2926" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="2" x2="12" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line></svg>
+      <svg class="trust-icon r-2 float-fast" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#8f8e89" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+      <div class="project-center">
+        <div style="margin-bottom: 12px;">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+             <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 2.5 2.5 0 0 1-.98-4.3A2.5 2.5 0 0 1 5.5 8.5 2.5 2.5 0 0 1 9.5 2Z" />
+             <circle cx="16" cy="12" r="2" fill="currentColor"/>
+          </svg>
+        </div>
+        <h2 class="project-title">AI Trust &<br>Human Control</h2>
+        <p class="project-subtitle">When should we trust AI?</p>
+      </div>
+    </a>
+
+    <!-- ROW 7 -->
+    <!-- 11. Toolkit Banner (About & Work) -->
+    <div class="bento-card tools span-4 row-1 tooltip-trigger" onclick="openModal('skillsModal')" data-category="about work" data-tooltip="Click to view all skills">
+      <span class="label">My Toolkit</span>
+      <ul class="tool-list">
+        <li>Figma</li>
+        <li>Protopie</li>
+        <li>Adobe Suite</li>
+        <li>UserTesting</li>
+        <li>AEM</li>
+        <li>HTML / CSS</li>
+        <li style="background:transparent; border:none; color:var(--text-muted);">+ 15 more</li>
+      </ul>
+    </div>
+
+  </main>
+
+  <!-- ==========================================================================
+       MODALS
+       ========================================================================== -->
+
+  <!-- Design Principle Modal -->
+  <div class="modal-overlay" id="principleModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal('principleModal')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      <h2 class="modal-title">Design Principles</h2>
+      <p class="modal-body">
+        Design systems improve efficiency and consistency, but <strong>never at the cost of user experience</strong>. <br><br>
+        I treat design systems as living foundations, not rigid constraints. If breaking a pattern means solving a real user problem more effectively, I'll break it. Then I feed what I've learned back into the system so it evolves. The best design systems aren't the ones that enforce the most rules, but the ones that make it easier to do the right thing for users.
+      </p>
+    </div>
+  </div>
+
+  <!-- Skills Modal -->
+  <div class="modal-overlay" id="skillsModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal('skillsModal')">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+      <h2 class="modal-title">My Complete Toolkit</h2>
+      
+      <div class="skills-group">
+        <h4>Design & Prototyping</h4>
+        <ul class="skills-list">
+          <li>Figma</li><li>FigJam</li><li>Adobe Photoshop</li><li>Illustrator</li><li>Miro</li><li>InVision</li><li>Ceros</li>
+        </ul>
+      </div>
+
+      <div class="skills-group">
+        <h4>Research & Testing</h4>
+        <ul class="skills-list">
+          <li>Hotjar</li><li>Google Analytics</li><li>Mixpanel</li><li>Maze</li><li>Useberry</li><li>A/B Testing</li><li>Heuristic Evaluation</li>
+        </ul>
+      </div>
+
+      <div class="skills-group">
+        <h4>CMS & Production</h4>
+        <ul class="skills-list">
+          <li>Adobe Experience Manager (AEM)</li><li>Sitecore</li><li>Shopify</li><li>Component-Based Dev</li>
+        </ul>
+      </div>
+
+      <div class="skills-group" style="margin-bottom:0;">
+        <h4>Coding & Collaboration</h4>
+        <ul class="skills-list">
+          <li>HTML</li><li>CSS</li><li>Jira</li><li>Confluence</li><li>Notion</li><li>Agile Methodologies</li><li>Sprint Planning</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Floating Navigation Filtering & Slider Logic ---
+    const navSlider = document.getElementById('navSlider');
+    const filterBtns = document.querySelectorAll('.nav-btn');
+    const bentoCards = document.querySelectorAll('.bento-card');
+
+    function setSliderPosition(element) {
+      navSlider.style.width = `${element.offsetWidth}px`;
+      navSlider.style.left = `${element.offsetLeft}px`;
+    }
+
+    // Initialize slider position on load
+    window.addEventListener('load', () => {
+      const activeBtn = document.querySelector('.nav-btn.active');
+      if (activeBtn) setSliderPosition(activeBtn);
+    });
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        setSliderPosition(btn);
+
+        const filter = btn.getAttribute('data-filter');
+
+        bentoCards.forEach(card => {
+          const category = card.getAttribute('data-category') || '';
+          if (filter === 'all' || category.includes(filter)) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    // --- Modal Logic ---
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+      document.getElementById('custom-tooltip').style.opacity = '0';
+    }
+    
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) overlay.classList.remove('active');
+      });
+    });
+
+    // --- Tooltip Logic ---
+    const tooltip = document.getElementById('custom-tooltip');
+    const triggers = document.querySelectorAll('.tooltip-trigger');
+
+    triggers.forEach(trigger => {
+      trigger.addEventListener('mousemove', (e) => {
+        tooltip.textContent = trigger.getAttribute('data-tooltip');
+        tooltip.style.opacity = '1';
+        tooltip.style.transform = `translate(${e.clientX + 14}px, ${e.clientY + 14}px)`; 
+      });
+
+      trigger.addEventListener('mouseleave', () => {
+        tooltip.style.opacity = '0';
+      });
+    });
+
+    // --- Dark Mode System Preference & Toggle ---
+    const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5" fill="#F59E0B"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line></svg>`;
+    const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const currentTheme = localStorage.getItem('theme') || (prefersDark ? 'dark' : 'light');
+
+    if (currentTheme === 'dark') {
+      document.body.setAttribute('data-theme', 'dark');
+      themeIcon.innerHTML = moonIcon;
+    }
+
+    themeToggle.addEventListener('click', () => {
+      let theme = document.body.getAttribute('data-theme');
+      if (theme === 'dark') {
+        document.body.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+        themeIcon.innerHTML = sunIcon;
+      } else {
+        document.body.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+        themeIcon.innerHTML = moonIcon;
+      }
+    });
+  </script>
+</body>
+</html>

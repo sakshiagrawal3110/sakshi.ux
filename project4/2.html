@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Research Framework - UX Research Methodology</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f6f5f2;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .framework {
+            max-width: 1320px;
+            width: 100%;
+            background: #fcfbf9;
+            border-radius: 28px;
+            border: 1px solid #e8e6e0;
+            padding: 3.5rem 3.5rem 3rem 3.5rem;
+            box-shadow: 0 8px 32px -12px rgba(0, 0, 0, 0.04);
+            position: relative;
+        }
+
+        /* subtle texture */
+        .framework::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 30%;
+            height: 40%;
+            background: radial-gradient(circle at 80% 100%, rgba(235, 233, 227, 0.2) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .framework-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 2.75rem;
+            border-bottom: 1px solid #ecebe6;
+            padding-bottom: 0.75rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .framework-header .title-group {
+            display: flex;
+            align-items: baseline;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .framework-header h2 {
+            font-size: 1.05rem;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            color: #2a2926;
+        }
+
+        .framework-header .sub {
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: #9a9892;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            background: #f0efeb;
+            padding: 0.2rem 0.7rem;
+            border-radius: 100px;
+            border: 1px solid #e3e1db;
+        }
+
+        .framework-header .meta {
+            font-size: 0.6rem;
+            font-weight: 400;
+            color: #b0aeaa;
+            letter-spacing: 0.02em;
+            background: #f6f5f2;
+            padding: 0.2rem 0.8rem;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* main journey - horizontal scroll on small screens */
+        .journey {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+            position: relative;
+            overflow-x: auto;
+            padding: 0.5rem 0 1.5rem 0;
+            scrollbar-width: thin;
+            scrollbar-color: #d6d4ce #f0efec;
+        }
+
+        .journey::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .journey::-webkit-scrollbar-track {
+            background: #f0efec;
+            border-radius: 10px;
+        }
+
+        .journey::-webkit-scrollbar-thumb {
+            background: #d6d4ce;
+            border-radius: 10px;
+        }
+
+        /* each step */
+        .step {
+            flex: 1 1 0;
+            min-width: 130px;
+            max-width: 200px;
+            padding: 0 0.5rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .step:first-child {
+            padding-left: 0;
+        }
+
+        .step:last-child {
+            padding-right: 0;
+        }
+
+        /* card */
+        .step-card {
+            background: #ffffff;
+            border: 1px solid #e6e4de;
+            border-radius: 16px;
+            padding: 1.5rem 1.25rem 1.25rem 1.25rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.15s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.01);
+            position: relative;
+        }
+
+        .step-card:hover {
+            border-color: #ceccc4;
+            background: #fefdfb;
+            box-shadow: 0 6px 18px -10px rgba(0, 0, 0, 0.04);
+        }
+
+        /* step number */
+        .step-number {
+            font-size: 0.55rem;
+            font-weight: 400;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #b3b1ab;
+            font-family: 'JetBrains Mono', monospace;
+            margin-bottom: 0.5rem;
+        }
+
+        /* step icon (minimal) */
+        .step-icon {
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: #4f4e49;
+            margin-bottom: 0.6rem;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .step-title {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1f1e1b;
+            letter-spacing: -0.01em;
+            margin-bottom: 0.4rem;
+        }
+
+        .step-desc {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: #6f6e69;
+            line-height: 1.5;
+            letter-spacing: 0.01em;
+            flex: 1;
+        }
+
+        .step-desc .highlight {
+            background: #f4f3ef;
+            padding: 0.05rem 0.3rem;
+            border-radius: 3px;
+            color: #3d3c38;
+            font-weight: 400;
+            font-size: 0.65rem;
+        }
+
+        /* methods / tags inside card */
+        .step-methods {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem 0.5rem;
+            margin-top: 0.75rem;
+            padding-top: 0.6rem;
+            border-top: 1px solid #efede8;
+        }
+
+        .step-methods .method-tag {
+            font-size: 0.55rem;
+            font-weight: 400;
+            color: #7a7974;
+            background: #f5f4f0;
+            padding: 0.1rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #e8e6e0;
+            letter-spacing: 0.02em;
+        }
+
+        /* arrow between steps */
+        .step-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            width: 1.75rem;
+            color: #cac8c1;
+            font-size: 1rem;
+            font-weight: 300;
+            position: relative;
+            padding: 0 0.1rem;
+            user-select: none;
+        }
+
+        .step-arrow svg {
+            width: 18px;
+            height: 18px;
+            stroke: #cac8c1;
+            stroke-width: 1.2;
+            fill: none;
+        }
+
+        .step-arrow .arrow-label {
+            position: absolute;
+            bottom: -1.4rem;
+            font-size: 0.5rem;
+            color: #b8b6b0;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            font-weight: 300;
+            white-space: nowrap;
+        }
+
+        /* footer / methodology note */
+        .framework-footer {
+            margin-top: 2.5rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid #ecebe6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .framework-footer .note {
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: #8f8e89;
+            letter-spacing: 0.01em;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .framework-footer .note .sep {
+            color: #dddcd6;
+        }
+
+        .framework-footer .badge {
+            font-size: 0.55rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #7a7974;
+            background: #f2f1ed;
+            padding: 0.2rem 0.8rem;
+            border-radius: 100px;
+            border: 1px solid #e3e1db;
+        }
+
+        /* responsive */
+        @media (max-width: 1024px) {
+            .framework {
+                padding: 2.5rem 2rem 2rem 2rem;
+            }
+            .step {
+                min-width: 110px;
+            }
+            .step-card {
+                padding: 1.25rem 1rem 1rem 1rem;
+            }
+        }
+
+        @media (max-width: 820px) {
+            .framework {
+                padding: 2rem 1.25rem 1.75rem 1.25rem;
+                border-radius: 20px;
+            }
+            .step {
+                min-width: 140px;
+                max-width: 180px;
+            }
+            .framework-header h2 {
+                font-size: 0.95rem;
+            }
+            .step-arrow {
+                width: 1.2rem;
+            }
+            .step-arrow svg {
+                width: 14px;
+                height: 14px;
+            }
+            .step-arrow .arrow-label {
+                display: none;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .framework {
+                padding: 1.5rem 0.75rem 1.5rem 0.75rem;
+                border-radius: 16px;
+            }
+            .framework-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            .step {
+                min-width: 160px;
+                max-width: 200px;
+                padding: 0 0.4rem;
+            }
+            .step-card {
+                padding: 1rem 0.9rem 0.9rem 0.9rem;
+                border-radius: 12px;
+            }
+            .step-title {
+                font-size: 0.8rem;
+            }
+            .step-desc {
+                font-size: 0.65rem;
+            }
+            .framework-footer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+
+        /* research artifact feel - subtle annotations */
+        .step-annotation {
+            position: absolute;
+            top: -0.6rem;
+            right: 0.8rem;
+            font-size: 0.45rem;
+            font-weight: 400;
+            color: #bfbdb7;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            background: #fcfbf9;
+            padding: 0.05rem 0.4rem;
+            border-radius: 3px;
+            border: 1px solid #edebe6;
+        }
+
+        /* specific step variations for visual rhythm */
+        .step-card.question {
+            background: #fcfbf9;
+        }
+        .step-card.synthesise {
+            border-color: #d4d2ca;
+            background: #faf9f7;
+        }
+        .step-card.translate {
+            border-color: #d0cec6;
+            background: #f9f8f5;
+        }
+    </style>
+</head>
+<body>
+    <div class="framework">
+
+        <!-- header -->
+        <div class="framework-header">
+            <div class="title-group">
+                <h2>Research framework · journey</h2>
+                <span class="sub">methodology artifact</span>
+            </div>
+            <span class="meta">v1.2 · 6 phases</span>
+        </div>
+
+        <!-- horizontal journey -->
+        <div class="journey">
+
+            <!-- Step 1: Question -->
+            <div class="step">
+                <div class="step-card question">
+                    <div class="step-number">01</div>
+                    <div class="step-icon">◈</div>
+                    <div class="step-title">Question</div>
+                    <div class="step-desc">
+                        Frame the <span class="highlight">inquiry</span>.
+                        Define scope, assumptions, and 
+                        success criteria.
+                    </div>
+                    <div class="step-methods">
+                        <span class="method-tag">scoping</span>
+                        <span class="method-tag">hypothesis</span>
+                        <span class="method-tag">stakeholder</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Arrow -->
+            <div class="step-arrow">
+                <svg viewBox="0 0 24 24">
+                    <path d="M5 12h14M15 6l6 6-6 6" />
+                </svg>
+                <span class="arrow-label">define</span>
+            </div>
+
+            <!-- Step 2: Explore -->
+            <div class="step">
+                <div class="step-card">
+                    <div class="step-number">02</div>
+                    <div class="step-icon">◌</div>
+                    <div class="step-title">Explore</div>
+                    <div class="step-desc">
+                        Open <span class="highlight">discovery</span>.
+                        Gather signals, patterns,
+                        and emergent themes.
+                    </div>
+                    <div class="step-methods">
+                        <span class="method-tag">interviews</span>
+                        <span class="method-tag">audits</span>
+                        <span class="method-tag">field</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Arrow -->
+            <div class="step-arrow">
+                <svg viewBox="0 0 24 24">
+                    <path d="M5 12h14M15 6l6 6-6 6" />
+                </svg>
+                <span class="arrow-label">discover</span>
+            </div>
+
+            <!-- Step 3: Observe -->
+            <div class="step">
+                <div class="step-card">
+                    <div class="step-number">03</div>
+                    <div class="step-icon">⊙</div>
+                    <div class="step-title">Observe</div>
+                    <div class="step-desc">
+                        Systematic <span class="highlight">observation</span>.
+                        Document behaviours,
+                        interactions, and context.
+                    </div>
+                    <div class="step-methods">
+                        <span class="method-tag">ethnography</span>
+                        <span class="method-tag">shadowing</span>
+                        <span class="method-tag">logs</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Arrow -->
+            <div class="step-arrow">
+                <svg viewBox="0 0 24 24">
+                    <path d="M5 12h14M15 6l6 6-6 6" />
+                </svg>
+                <span class="arrow-label">record</span>
+            </div>
+
+            <!-- Step 4: Test -->
+            <div class="step">
+                <div class="step-card">
+                    <div class="step-number">04</div>
+                    <div class="step-icon">⊚</div>
+                    <div class="step-title">Test</div>
+                    <div class="step-desc">
+                        Controlled <span class="highlight">experimentation</span>.
+                        Validate hypotheses,
+                        measure outcomes.
+                    </div>
+                    <div class="step-methods">
+                        <span class="method-tag">A/B</span>
+                        <span class="method-tag">usability</span>
+                        <span class="method-tag">surveys</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Arrow -->
+            <div class="step-arrow">
+                <svg viewBox="0 0 24 24">
+                    <path d="M5 12h14M15 6l6 6-6 6" />
+                </svg>
+                <span class="arrow-label">validate</span>
+            </div>
+
+            <!-- Step 5: Synthesise -->
+            <div class="step">
+                <div class="step-card synthesise">
+                    <div class="step-number">05</div>
+                    <div class="step-icon">◈</div>
+                    <div class="step-title">Synthesise</div>
+                    <div class="step-desc">
+                        Integrate <span class="highlight">findings</span>.
+                        Identify themes, contradictions,
+                        and core insights.
+                    </div>
+                    <div class="step-methods">
+                        <span class="method-tag">affinity</span>
+                        <span class="method-tag">meta‑analysis</span>
+                        <span class="method-tag">mapping</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Arrow -->
+            <div class="step-arrow">
+                <svg viewBox="0 0 24 24">
+                    <path d="M5 12h14M15 6l6 6-6 6" />
+                </svg>
+                <span class="arrow-label">distill</span>
+            </div>
+
+            <!-- Step 6: Translate -->
+            <div class="step">
+                <div class="step-card translate">
+                    <div class="step-number">06</div>
+                    <div class="step-icon">⟡</div>
+                    <div class="step-title">Translate</div>
+                    <div class="step-desc">
+                        Convert insights into <span class="highlight">action</span>.
+                        Recommendations, frameworks,
+                        and deliverables.
+                    </div>
+                    <div class="step-methods">
+                        <span class="method-tag">specs</span>
+                        <span class="method-tag">principles</span>
+                        <span class="method-tag">roadmap</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- footer -->
+        <div class="framework-footer">
+            <div class="note">
+                <span>iterative · non‑linear</span>
+                <span class="sep">|</span>
+                <span>6 phases · 18 methods</span>
+                <span class="sep">|</span>
+                <span>mixed‑methods approach</span>
+            </div>
+            <span class="badge">UX research · 2026</span>
+        </div>
+
+    </div>
+</body>
+</html>

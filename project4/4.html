@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Affinity Map - AI Trust Research Synthesis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f1efe9;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .affinity-map {
+            max-width: 1440px;
+            width: 100%;
+            background: #faf9f6;
+            border-radius: 28px;
+            border: 1px solid #e3e1db;
+            padding: 2.5rem 2.5rem 2rem 2.5rem;
+            box-shadow: 0 12px 48px -16px rgba(0, 0, 0, 0.05);
+        }
+
+        /* header with study context */
+        .map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-bottom: 1px solid #e8e6e0;
+            padding-bottom: 1rem;
+        }
+
+        .map-header .title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .map-header h2 {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #2a2926;
+            letter-spacing: -0.01em;
+        }
+
+        .map-header .subtitle {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: #6f6e69;
+            line-height: 1.4;
+            max-width: 500px;
+        }
+
+        .map-header .subtitle .highlight {
+            background: #f0ede6;
+            padding: 0.05rem 0.3rem;
+            border-radius: 3px;
+            color: #4a433a;
+        }
+
+        .map-header .meta-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem 1.5rem;
+            align-items: center;
+        }
+
+        .map-header .meta-item {
+            font-size: 0.55rem;
+            font-weight: 400;
+            color: #8f8e89;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .map-header .meta-item .num {
+            font-weight: 500;
+            color: #4a4945;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+        }
+
+        .map-header .meta-item .dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #d6d4ce;
+            display: inline-block;
+        }
+
+        .study-tag {
+            font-size: 0.5rem;
+            font-weight: 400;
+            color: #7a7974;
+            background: #f0efeb;
+            padding: 0.15rem 0.6rem;
+            border-radius: 100px;
+            border: 1px solid #e3e1db;
+        }
+
+        /* progression bar */
+        .progression {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 0.5rem 1rem 0.5rem;
+            border-bottom: 2px solid #e8e6e0;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .progression .stage {
+            font-size: 0.55rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #8f8e89;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 100px;
+            background: #f5f4f0;
+            border: 1px solid #e8e6e0;
+        }
+
+        .progression .stage.active {
+            color: #2a2926;
+            background: #ffffff;
+            border-color: #cbc9c2;
+        }
+
+        .progression .stage .count {
+            font-weight: 400;
+            color: #b3b1ab;
+            font-size: 0.45rem;
+            background: #f0efeb;
+            padding: 0.05rem 0.3rem;
+            border-radius: 100px;
+        }
+
+        .progression .arrow {
+            color: #d6d4ce;
+            font-size: 0.7rem;
+        }
+
+        /* main grid - 5 columns */
+        .map-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        /* theme column */
+        .theme-column {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .theme-header {
+            font-size: 0.55rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #3d3c38;
+            padding: 0.4rem 0.6rem;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f7f4;
+            border: 1px solid #e3e1db;
+        }
+
+        .theme-header .note-count {
+            font-weight: 400;
+            font-size: 0.45rem;
+            color: #b3b1ab;
+            background: #f0efeb;
+            padding: 0.05rem 0.4rem;
+            border-radius: 100px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .theme-header .icon {
+            font-size: 0.8rem;
+        }
+
+        .theme-header.understanding {
+            border-left: 3px solid #d4c5b2;
+        }
+        .theme-header.verification {
+            border-left: 3px solid #b8c9c9;
+        }
+        .theme-header.control {
+            border-left: 3px solid #c9c4b8;
+        }
+        .theme-header.uncertainty {
+            border-left: 3px solid #d0c4c4;
+        }
+        .theme-header.responsibility {
+            border-left: 3px solid #c4bcc4;
+        }
+
+        /* individual note */
+        .note {
+            background: #ffffff;
+            border: 1px solid #e8e6e0;
+            border-radius: 8px;
+            padding: 0.5rem 0.6rem;
+            font-size: 0.55rem;
+            line-height: 1.5;
+            color: #3d3c38;
+            transition: all 0.1s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.01);
+        }
+
+        .note:hover {
+            border-color: #ceccc4;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.03);
+        }
+
+        .note .participant {
+            font-size: 0.45rem;
+            font-weight: 400;
+            color: #b3b1ab;
+            font-family: 'JetBrains Mono', monospace;
+            display: inline-block;
+            margin-right: 0.3rem;
+        }
+
+        .note .highlight {
+            background: #faf0d7;
+            padding: 0.05rem 0.15rem;
+            border-radius: 2px;
+            font-weight: 500;
+            color: #4a3d2a;
+        }
+
+        .note .highlight-blue {
+            background: #e6edf5;
+            padding: 0.05rem 0.15rem;
+            border-radius: 2px;
+            font-weight: 500;
+            color: #2d3d4a;
+        }
+
+        .note .highlight-green {
+            background: #e6f0ea;
+            padding: 0.05rem 0.15rem;
+            border-radius: 2px;
+            font-weight: 500;
+            color: #2d4a3d;
+        }
+
+        .note .tag {
+            display: inline-block;
+            font-size: 0.4rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #8f8e89;
+            background: #f5f4f0;
+            padding: 0.05rem 0.3rem;
+            border-radius: 3px;
+            border: 1px solid #e8e6e0;
+            margin-top: 0.2rem;
+        }
+
+        .note .tag.insight {
+            background: #ede8e0;
+            border-color: #d6cebe;
+            color: #5a4e3a;
+        }
+
+        .note .tag.observation {
+            background: #f0efeb;
+            border-color: #e3e1db;
+            color: #6f6e69;
+        }
+
+        /* insight cards (bottom of each column) */
+        .insight-card {
+            margin-top: 0.3rem;
+            padding: 0.6rem 0.7rem;
+            border-radius: 8px;
+            background: #f5f4f0;
+            border: 1px solid #dddcd6;
+            font-size: 0.55rem;
+            line-height: 1.5;
+            color: #2a2926;
+            border-left: 3px solid #b3b0a8;
+        }
+
+        .insight-card .insight-label {
+            font-size: 0.45rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #8f8e89;
+            display: block;
+            margin-bottom: 0.15rem;
+        }
+
+        .insight-card.understanding {
+            border-left-color: #d4c5b2;
+            background: #faf7f3;
+        }
+        .insight-card.verification {
+            border-left-color: #b8c9c9;
+            background: #f3f7f7;
+        }
+        .insight-card.control {
+            border-left-color: #c9c4b8;
+            background: #f7f6f3;
+        }
+        .insight-card.uncertainty {
+            border-left-color: #d0c4c4;
+            background: #f7f5f5;
+        }
+        .insight-card.responsibility {
+            border-left-color: #c4bcc4;
+            background: #f6f5f6;
+        }
+
+        /* synthesis footer */
+        .synthesis-footer {
+            border-top: 2px solid #e8e6e0;
+            padding-top: 1.5rem;
+            margin-top: 0.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .synthesis-footer .block {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .synthesis-footer .block .label {
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #8f8e89;
+        }
+
+        .synthesis-footer .block .value {
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: #2a2926;
+            line-height: 1.5;
+        }
+
+        .synthesis-footer .block .value .em {
+            background: #f0ede6;
+            padding: 0.05rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        /* responsive */
+        @media (max-width: 1200px) {
+            .affinity-map {
+                padding: 2rem 1.5rem 1.5rem 1.5rem;
+            }
+            .map-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 1rem;
+            }
+            .synthesis-footer {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 820px) {
+            .affinity-map {
+                padding: 1.5rem 1rem 1.25rem 1rem;
+                border-radius: 20px;
+            }
+            .map-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .synthesis-footer {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .map-header .meta-group {
+                gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .map-grid {
+                grid-template-columns: 1fr;
+            }
+            .progression {
+                flex-wrap: wrap;
+                gap: 0.3rem;
+            }
+            .progression .arrow {
+                display: none;
+            }
+        }
+
+        /* scrollable container for notes */
+        .notes-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 0.2rem;
+        }
+
+        .notes-container::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .notes-container::-webkit-scrollbar-track {
+            background: #f0efec;
+            border-radius: 10px;
+        }
+
+        .notes-container::-webkit-scrollbar-thumb {
+            background: #d6d4ce;
+            border-radius: 10px;
+        }
+
+        /* participant legend */
+        .participant-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            padding: 0.5rem 0 0.75rem 0;
+            border-bottom: 1px solid #e8e6e0;
+            margin-bottom: 1.25rem;
+        }
+
+        .participant-legend .leg-item {
+            font-size: 0.5rem;
+            color: #6f6e69;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .participant-legend .leg-item .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .participant-legend .leg-item .p1 {
+            background: #d4c5b2;
+        }
+        .participant-legend .leg-item .p2 {
+            background: #b8c9c9;
+        }
+        .participant-legend .leg-item .p3 {
+            background: #c9c4b8;
+        }
+        .participant-legend .leg-item .p4 {
+            background: #d0c4c4;
+        }
+        .participant-legend .leg-item .p5 {
+            background: #c4bcc4;
+        }
+    </style>
+</head>
+<body>
+    <div class="affinity-map">
+
+        <!-- header with study context -->
+        <div class="map-header">
+            <div class="title-group">
+                <h2>Affinity map - AI Trust Research</h2>
+                <div class="subtitle">
+                    Exploring how people decide when to <span class="highlight">trust</span>, 
+                    <span class="highlight">verify</span>, or <span class="highlight">reject</span> 
+                    AI-generated information
+                </div>
+            </div>
+            <div class="meta-group">
+                <span class="meta-item"><span class="num">12</span> participants</span>
+                <span class="meta-item"><span class="num">6</span> sessions</span>
+                <span class="meta-item"><span class="num">47</span> observations</span>
+                <span class="meta-item"><span class="num">5</span> themes</span>
+                <span class="study-tag">diary study · 5 days</span>
+                <span class="study-tag">usability testing</span>
+            </div>
+        </div>
+
+        <!-- participant legend -->
+        <div class="participant-legend">
+            <span class="leg-item"><span class="dot p1"></span> AI Explorers (4)</span>
+            <span class="leg-item"><span class="dot p2"></span> AI Pragmatists (5)</span>
+            <span class="leg-item"><span class="dot p3"></span> AI Skeptics (3)</span>
+            <span class="leg-item" style="margin-left:auto;"><span class="dot" style="background:#e8e6e0;"></span> behaviour observation</span>
+            <span class="leg-item"><span class="dot" style="background:#faf0d7;"></span> highlighted quote</span>
+        </div>
+
+        <!-- progression -->
+        <div class="progression">
+            <span class="stage active">Observations <span class="count">47</span></span>
+            <span class="arrow">→</span>
+            <span class="stage active">Themes <span class="count">5</span></span>
+            <span class="arrow">→</span>
+            <span class="stage active">Insights <span class="count">5</span></span>
+            <span style="margin-left:auto; font-size:0.5rem; color:#b3b1ab; font-family:'JetBrains Mono',monospace;">
+                synthesis · v3
+            </span>
+        </div>
+
+        <!-- grid -->
+        <div class="map-grid">
+
+            <!-- Column 1: Understanding -->
+            <div class="theme-column">
+                <div class="theme-header understanding">
+                    <span><span class="icon">🧠</span> Understanding</span>
+                    <span class="note-count">11 notes</span>
+                </div>
+                <div class="notes-container">
+                    <div class="note">
+                        <span class="participant">P02 · E</span>
+                        “I need to know <span class="highlight">what exactly</span> the AI used to make this recommendation”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P07 · S</span>
+                        “If I can't see the <span class="highlight-blue">source material</span>, I don't trust the output”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P04 · E</span>
+                        “The explanation matters more than the answer itself”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P09 · P</span>
+                        “I want to know <span class="highlight">why this</span> and not something else”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P11 · S</span>
+                        <span class="highlight-blue">“How does it know?”</span> is always my first question
+                    </div>
+                    <div class="note">
+                        <span class="participant">P03 · E</span>
+                        “Seeing the <span class="highlight">reasoning chain</span> helps me follow along”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P06 · P</span>
+                        “I don't need to know everything - just <span class="highlight-blue">the key factors</span>”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P01 · E</span>
+                        <span class="highlight">“Show your work”</span> - that's what I want from AI
+                    </div>
+                    <div class="note">
+                        <span class="participant">P10 · S</span>
+                        “If it can't explain <span class="highlight-blue">how it got there</span>, why should I believe it?”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P08 · P</span>
+                        “The <span class="highlight">transparency</span> makes me more comfortable using it”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P05 · E</span>
+                        “I want to see <span class="highlight-blue">what information</span> was considered”
+                    </div>
+                </div>
+                <div class="insight-card understanding">
+                    <span class="insight-label">★ insight</span>
+                    Users need to understand <span class="highlight">what information</span> AI used and <span class="highlight-blue">why</span> - not just the final answer.
+                </div>
+            </div>
+
+            <!-- Column 2: Verification -->
+            <div class="theme-column">
+                <div class="theme-header verification">
+                    <span><span class="icon">🔍</span> Verification</span>
+                    <span class="note-count">10 notes</span>
+                </div>
+                <div class="notes-container">
+                    <div class="note">
+                        <span class="participant">P06 · P</span>
+                        “I always <span class="highlight-blue">cross-check</span> with at least two other sources”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P02 · E</span>
+                        “Trust but <span class="highlight">verify</span> - that's my approach with AI”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P09 · P</span>
+                        “If I can't <span class="highlight-blue">verify it myself</span>, I won't use it”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P11 · S</span>
+                        “The more <span class="highlight">confident</span> it sounds, the more I want to check”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P04 · E</span>
+                        “I use AI for <span class="highlight-blue">discovery</span>, but not for decisions”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P07 · S</span>
+                        <span class="highlight">“Where can I check this?”</span> - that's what I look for
+                    </div>
+                    <div class="note">
+                        <span class="participant">P01 · E</span>
+                        “Verification should be <span class="highlight-blue">built in</span>, not an afterthought”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P10 · S</span>
+                        “I trust AI for <span class="highlight">summarisation</span>, but I verify recommendations”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P03 · E</span>
+                        “If I can <span class="highlight-blue">check the source</span> easily, I trust it more”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P08 · P</span>
+                        “I <span class="highlight">fact-check</span> anything that seems too convenient”
+                    </div>
+                </div>
+                <div class="insight-card verification">
+                    <span class="insight-label">★ insight</span>
+                    Trust isn't binary - users trust AI for <span class="highlight-blue">discovery &amp; organisation</span>, but verify before <span class="highlight">action &amp; decisions</span>.
+                </div>
+            </div>
+
+            <!-- Column 3: Control -->
+            <div class="theme-column">
+                <div class="theme-header control">
+                    <span><span class="icon">🎛</span> Control</span>
+                    <span class="note-count">9 notes</span>
+                </div>
+                <div class="notes-container">
+                    <div class="note">
+                        <span class="participant">P05 · E</span>
+                        “I want to <span class="highlight">change the inputs</span> and see what happens”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P09 · P</span>
+                        “If I can <span class="highlight-blue">adjust the criteria</span>, I trust it more”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P02 · E</span>
+                        “Being able to <span class="highlight">override</span> makes me feel in control”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P11 · S</span>
+                        “I don't want AI to make the decision - I want it to <span class="highlight-blue">inform</span> it”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P07 · S</span>
+                        “<span class="highlight">Control</span> is the difference between AI as a tool and AI as a replacement”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P04 · E</span>
+                        “I want to <span class="highlight-blue">inspect</span> before I accept”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P10 · S</span>
+                        “If I can <span class="highlight">reject</span> easily, I'm more willing to try”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P06 · P</span>
+                        “<span class="highlight-blue">Modify → Verify → Accept</span> - that's my workflow”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P03 · E</span>
+                        “The ability to <span class="highlight">drill down</span> into the reasoning builds trust”
+                    </div>
+                </div>
+                <div class="insight-card control">
+                    <span class="insight-label">★ insight</span>
+                    Trust increases when users can <span class="highlight">inspect → modify → verify → reject</span>, rather than simply <span class="highlight-blue">accept → continue</span>.
+                </div>
+            </div>
+
+            <!-- Column 4: Uncertainty -->
+            <div class="theme-column">
+                <div class="theme-header uncertainty">
+                    <span><span class="icon">⚠️</span> Uncertainty</span>
+                    <span class="note-count">9 notes</span>
+                </div>
+                <div class="notes-container">
+                    <div class="note">
+                        <span class="participant">P08 · P</span>
+                        “When AI is <span class="highlight-blue">overly confident</span>, I get suspicious”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P01 · E</span>
+                        “I'd rather see <span class="highlight">uncertainty</span> than false confidence”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P11 · S</span>
+                        “<span class="highlight-blue">Confidence</span> isn't the same as credibility”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P04 · E</span>
+                        “When it says <span class="highlight">‘I'm not sure’</span>, I actually trust it more”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P09 · P</span>
+                        “The <span class="highlight-blue">polished</span> responses feel more suspicious”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P07 · S</span>
+                        “I want AI to tell me <span class="highlight">what it doesn't know</span>”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P03 · E</span>
+                        “<span class="highlight-blue">Uncertainty</span> should be visible, not hidden”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P06 · P</span>
+                        “If it sounds too polished, I <span class="highlight">question</span> it more”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P10 · S</span>
+                        “<span class="highlight-blue">Honest uncertainty</span> is more trustworthy than fake confidence”
+                    </div>
+                </div>
+                <div class="insight-card uncertainty">
+                    <span class="insight-label">★ insight</span>
+                    A <span class="highlight">polished, confident</span> response can feel convincing, but users become more comfortable when uncertainty is <span class="highlight-blue">visible and honest</span>.
+                </div>
+            </div>
+
+            <!-- Column 5: Responsibility -->
+            <div class="theme-column">
+                <div class="theme-header responsibility">
+                    <span><span class="icon">🤝</span> Responsibility</span>
+                    <span class="note-count">8 notes</span>
+                </div>
+                <div class="notes-container">
+                    <div class="note">
+                        <span class="participant">P10 · S</span>
+                        “<span class="highlight-blue">Who takes responsibility</span> if this is wrong?”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P02 · E</span>
+                        “AI should <span class="highlight">assist</span> the decision, not make it”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P07 · S</span>
+                        “I need to know <span class="highlight-blue">who's accountable</span> for the output”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P05 · E</span>
+                        “The <span class="highlight">human should always be</span> the final decision-maker”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P11 · S</span>
+                        “If it's <span class="highlight-blue">high-stakes</span>, I want human oversight”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P09 · P</span>
+                        “I use AI for <span class="highlight">low-stakes</span> tasks, but not for critical ones”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P04 · E</span>
+                        “<span class="highlight-blue">Responsibility</span> can't be outsourced to AI”
+                    </div>
+                    <div class="note">
+                        <span class="participant">P01 · E</span>
+                        “The system should <span class="highlight">support human judgement</span>, not obscure it”
+                    </div>
+                </div>
+                <div class="insight-card responsibility">
+                    <span class="insight-label">★ insight</span>
+                    Users are more likely to trust AI in <span class="highlight-blue">low-stakes</span> situations, but expect <span class="highlight">human oversight</span> and accountability for high-stakes decisions.
+                </div>
+            </div>
+
+        </div>
+
+        <!-- synthesis footer -->
+        <div class="synthesis-footer">
+            <div class="block">
+                <span class="label">Synthesis summary</span>
+                <div class="value">
+                    Across <span class="em">47 observations</span> from 12 participants, 
+                    5 core themes emerged around AI trust: 
+                    <span class="em">Understanding</span>, 
+                    <span class="em">Verification</span>, 
+                    <span class="em">Control</span>, 
+                    <span class="em">Uncertainty</span>, and 
+                    <span class="em">Responsibility</span>.
+                </div>
+            </div>
+            <div class="block">
+                <span class="label">Key behavioural insight</span>
+                <div class="value">
+                    Trust isn't binary - it's a <span class="em">spectrum</span> from 
+                    <span class="em">Accept → Question → Verify → Modify → Reject</span>. 
+                    Different contexts require different levels of user control and transparency.
+                </div>
+            </div>
+            <div class="block">
+                <span class="label">Design implication</span>
+                <div class="value">
+                    The goal isn't to make users <span class="em">trust AI more</span>. 
+                    It's to help users <span class="em">know when AI deserves their trust</span> 
+                    - through evidence, transparency, and meaningful control.
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

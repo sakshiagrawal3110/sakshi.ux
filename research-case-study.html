@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Trust & Human Control | UX Research Case Study</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* 1. Enable Cross-Document View Transitions (Modern Spec) */
+    @view-transition {
+      navigation: auto;
+    }
+
+    /* 2. Global Spring Timing */
+    ::view-transition-group(*) {
+      animation-duration: 0.6s;
+      animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* 3. Force the expanding card to fly OVER the rest of the page */
+    ::view-transition-group(hero-agentic),
+    ::view-transition-group(hero-trust),
+    ::view-transition-group(hero-research),
+    ::view-transition-group(hero-clinical) {
+      z-index: 9999;
+    }
+
+    /* 4. The Framer Fix: Prevent text/images from stretching by acting as a cover crop */
+    ::view-transition-old(hero-agentic),
+    ::view-transition-new(hero-agentic),
+    ::view-transition-old(hero-trust),
+    ::view-transition-new(hero-trust),
+    ::view-transition-old(hero-research),
+    ::view-transition-new(hero-research),
+    ::view-transition-old(hero-clinical),
+    ::view-transition-new(hero-clinical) {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      object-position: center;
+      border-radius: inherit;
+      mix-blend-mode: normal;
+    }
+
+    /* 5. Speed up the background page crossfade so it drops in smoothly behind the card */
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: 0.25s;
+    }
+
+    /* ==========================================================================
+       1. GLOBAL DESIGN SYSTEM & THEME
+       ========================================================================== */
+    :root {
+      --bg-color: #fcfbf9;
+      --text-main: #18181b;
+      --text-muted: #71717a;
+      --text-body: #3f3f46;
+      --border-color: #e4e4e7;
+      --panel-bg: #ffffff;
+      --panel-subtle: rgba(0, 0, 0, 0.025);
+      --panel-border: rgba(0, 0, 0, 0.04);
+      --glass-bg: rgba(255, 255, 255, 0.55);
+      --glass-border: rgba(255, 255, 255, 0.8);
+      --transition-apple: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      --spring-easing: cubic-bezier(0.16, 1, 0.3, 1);
+      
+      /* Project Specific Accents: Editorial Slate & Stone */
+      --brand-primary: #5a5954;
+      --brand-dark: #2a2926;
+
+      --cursor-default: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.65 2.15c-.25-.25-.65-.07-.65.28v18.08c0 .39.48.56.73.26l4.07-4.91c.11-.14.28-.22.45-.22h6.64c.38 0 .55-.47.27-.75L5.65 2.15z' fill='%2318181b' stroke='%23ffffff' stroke-width='1.5'/%3E%3C/svg%3E") 4 4, auto;
+      --cursor-text: url("data:image/svg+xml,%3Csvg width='12' height='24' viewBox='0 0 12 24' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='5' y='3' width='1.5' height='18' fill='%2318181b'/%3E%3C/svg%3E") 6 12, text;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #1c1b19;
+      --text-main: #f2f0eb;
+      --text-muted: #a19f99;
+      --text-body: #d6d4ce;
+      --border-color: #3d3c38;
+      --panel-bg: #2a2926;
+      --panel-subtle: rgba(255, 255, 255, 0.04);
+      --panel-border: rgba(255, 255, 255, 0.08);
+      --glass-bg: rgba(42, 41, 38, 0.72);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      
+      --brand-primary: #b3b1ab;
+
+      --cursor-default: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.65 2.15c-.25-.25-.65-.07-.65.28v18.08c0 .39.48.56.73.26l4.07-4.91c.11-.14.28-.22.45-.22h6.64c.38 0 .55-.47.27-.75L5.65 2.15z' fill='%23f2f0eb' stroke='%2318181b' stroke-width='1.5'/%3E%3C/svg%3E") 4 4, auto;
+      --cursor-text: url("data:image/svg+xml,%3Csvg width='12' height='24' viewBox='0 0 12 24' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='5' y='3' width='1.5' height='18' fill='%23f2f0eb'/%3E%3C/svg%3E") 6 12, text;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; cursor: var(--cursor-default); }
+    html, body { cursor: var(--cursor-default); }
+    h1, h2, h3, h4, h5, h6, p, span, li, input, textarea { cursor: var(--cursor-text); }
+    a, button, .toggle-btn, .close-btn { cursor: pointer; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      min-height: 100vh;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      overflow-x: hidden;
+    }
+
+    body[data-theme="dark"] {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(143, 142, 137, 0.08), transparent 34rem),
+        var(--bg-color);
+    }
+
+    .case-study-container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 100px 24px 80px;
+      position: relative;
+    }
+
+    /* --- Hero Element with Dynamic Video Background --- */
+    .hero-image {
+      view-transition-name: hero-research;
+      width: 100%;
+      height: 460px;
+      /* Fallback background in case video is loading */
+      background: linear-gradient(135deg, var(--brand-dark), var(--brand-primary));
+      border-radius: 40px;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      contain: paint;
+      transition: transform 0.7s var(--spring-easing), box-shadow 0.7s var(--spring-easing);
+      will-change: transform, box-shadow;
+    }
+
+    .hero-image:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12); }
+
+    .hero-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      opacity: 0.65;
+      transition: opacity 0.4s ease;
+    }
+
+    .hero-video-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      /* Vignette blending effect using the editorial dark color */
+      background: radial-gradient(circle at center, transparent 25%, rgba(42, 41, 38, 0.85) 100%);
+      box-shadow: inset 0 0 40px rgba(42, 41, 38, 0.6);
+    }
+
+    .hero-edge-blur {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      /* Masks the blur so it only applies heavily to the outer edges */
+      -webkit-mask-image: radial-gradient(circle at center, transparent 40%, black 95%);
+      mask-image: radial-gradient(circle at center, transparent 40%, black 95%);
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      color: #f2f0eb;
+      padding: 2rem;
+      width: 100%;
+      z-index: 3;
+      animation: content-rise 0.8s 0.12s var(--spring-easing) both;
+    }
+
+    .hero-title { font-size: 3.5rem; font-weight: 600; margin-bottom: 0.5rem; letter-spacing: -0.02em; line-height: 1.1; padding: 0 1rem; text-shadow: 0 2px 12px rgba(0,0,0,0.2); }
+    .hero-subtitle { font-size: 1.25rem; font-weight: 400; margin-top: 1rem; margin-bottom: 1.5rem; opacity: 0.95; max-width: 500px; text-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+    .hero-divider { width: 100%; max-width: 560px; height: 1px; background-color: rgba(255, 255, 255, 0.2); }
+
+    /* --- Floating UI --- */
+    .close-btn {
+      position: fixed; top: 2rem; right: 2rem; width: 48px; height: 48px;
+      background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border); border-radius: 50%;
+      display: flex; justify-content: center; align-items: center;
+      color: var(--text-main); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      transition: var(--transition-apple); z-index: 1000; text-decoration: none;
+    }
+    .close-btn:hover { transform: scale(1.08); background: rgba(255, 255, 255, 0.85); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); }
+    .close-btn:active { transform: scale(0.92); transition: transform 0.1s ease; }
+    [data-theme="dark"] .close-btn:hover { background: rgba(80, 78, 73, 0.9); }
+
+    .toggle-wrapper {
+      position: fixed; top: 1.75rem; left: 50%; transform: translateX(-50%);
+      z-index: 999; display: flex; justify-content: center; pointer-events: none;
+    }
+    .glass-toggle {
+      pointer-events: auto; position: relative; display: flex; align-items: center;
+      background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 99px; padding: 5px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 1);
+    }
+    [data-theme="dark"] .glass-toggle {
+      background: rgba(42, 41, 38, 0.48); border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.36), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    }
+    .toggle-slider {
+      position: absolute; top: 5px; left: 5px; width: calc(50% - 5px); height: calc(100% - 10px);
+      background: #ffffff; border-radius: 99px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 1;
+    }
+    [data-theme="dark"] .toggle-slider {
+      background: rgba(143, 142, 137, 0.4); border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+    }
+    .glass-toggle.tldr-active .toggle-slider { transform: translateX(100%); }
+    .toggle-btn {
+      position: relative; z-index: 2; background: none; border: none; padding: 9px 30px;
+      font-family: inherit; font-size: 0.95rem; font-weight: 500; color: var(--text-muted); width: 125px; transition: color 0.3s ease;
+    }
+    .toggle-btn.active { color: var(--text-main); font-weight: 600; }
+    .toggle-btn:hover:not(.active) { color: var(--text-main); opacity: 0.7;}
+
+    /* --- Narrative Typography & Layout --- */
+    .content-area { width: 100%; position: relative; }
+    .content-section { display: none; opacity: 0; transform: translateY(12px); transition: opacity 0.45s ease, transform 0.45s ease; }
+    .content-section.active { display: block; opacity: 1; transform: translateY(0); }
+    
+    .content-section h1 { font-size: 2.25rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 1.5rem; color: var(--text-main); }
+    .content-section h2 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-main); letter-spacing: -0.01em; margin-top: 1.5rem;}
+    .content-section h3 { font-size: 1.15rem; margin-bottom: 0.5rem; color: var(--text-main); letter-spacing: -0.01em; margin-top: 1.5rem;}
+    .content-section p { font-size: 1.125rem; line-height: 1.7; color: var(--text-body); margin-bottom: 1.5rem; }
+    .section-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--brand-primary); font-weight: 600; margin-bottom: 0.5rem; margin-top: 3.5rem; display: block; }
+    
+    .content-section ul { margin-bottom: 1.5rem; padding-left: 1.5rem; }
+    .content-section li { font-size: 1.125rem; line-height: 1.7; color: var(--text-body); margin-bottom: 0.5rem; }
+
+    .quote-box { background: var(--panel-subtle); border-left: 4px solid var(--brand-primary); padding: 1.5rem; border-radius: 0 12px 12px 0; margin-bottom: 1.5rem;}
+    .quote-box p { margin-bottom: 0; font-weight: 500; color: var(--text-main); }
+
+    .meta-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 2rem 0 3rem; padding: 1.5rem; background: var(--panel-subtle); border-radius: 16px; border: 1px solid var(--panel-border); }
+    .meta-grid { animation: content-rise 0.7s 0.24s var(--spring-easing) both; }
+    .meta-item { transition: transform 0.4s var(--spring-easing); }
+    .meta-item:hover { transform: translateY(-3px); }
+    .content-section.active > * { animation: content-fade-in 0.65s var(--spring-easing) both; }
+    .content-section.active > *:nth-child(2) { animation-delay: 0.06s; }
+    .content-section.active > *:nth-child(3) { animation-delay: 0.12s; }
+    .content-section.active > *:nth-child(4) { animation-delay: 0.18s; }
+    .meta-item h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.25rem; }
+    .meta-item p { font-size: 0.95rem; font-weight: 500; margin-bottom: 0 !important; color: var(--text-main); }
+
+    /* TLDR Layout */
+    .tldr-list { list-style: none; margin-bottom: 2.5rem; padding-left: 0 !important;}
+    .tldr-list li { font-size: 1.125rem; line-height: 1.7; color: var(--text-body); margin-bottom: 1.25rem; padding-left: 1.5rem; position: relative; }
+    .tldr-list li::before { content: ''; position: absolute; left: 0; top: 10px; width: 6px; height: 6px; background-color: var(--text-main); border-radius: 50%; }
+    .tldr-list strong { color: var(--text-main); font-weight: 600; }
+    
+    .impact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .impact-card { background: var(--panel-bg); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02); }
+    .impact-card h3 { font-size: 1.25rem; color: var(--brand-dark); margin-bottom: 0.5rem; }
+    [data-theme="dark"] .impact-card h3 { color: var(--brand-primary); }
+    .impact-card p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 0; }
+
+    /* ==========================================================================
+       2. IFRAME MOCKUP CONTAINERS (Fully Responsive, No Double Scroll)
+       ========================================================================== */
+    .iframe-wrapper {
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100vw;
+      max-width: 1320px; /* Cinematic breakout width for research artifacts */
+      margin: 4rem 0;
+      border-radius: 24px;
+      background: #f2f0eb; /* Matches the document background of the iframes exactly */
+      box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+      overflow: hidden; /* Prevents ugly double scrollbars */
+      transition: transform 0.6s var(--spring-easing), box-shadow 0.6s var(--spring-easing);
+      will-change: transform, box-shadow;
+    }
+
+    .iframe-wrapper:hover { transform: translateX(-50%) translateY(-6px); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12); }
+
+    @keyframes content-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes content-fade-in { from { opacity: 0; } to { opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+    }
+
+    [data-theme="dark"] .iframe-wrapper {
+      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+    }
+
+    .iframe-wrapper iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* Calibrated heights based on the content of each specific HTML file */
+    .h-500 { height: 500px; }
+    .h-650 { height: 650px; }
+    .h-750 { height: 750px; }
+    .h-800 { height: 800px; }
+    .h-850 { height: 850px; }
+    .h-900 { height: 900px; }
+
+    /* Responsive Overrides */
+    @media (max-width: 1024px) {
+      .case-study-container { padding-top: 90px; }
+      .iframe-wrapper { 
+        margin: 3rem -24px; 
+        border-radius: 0; 
+        max-width: 100vw;
+      }
+      .meta-grid, .impact-grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: 2.25rem; }
+      .hero-subtitle { font-size: 1rem; margin-bottom: 1.25rem; }
+      .hero-divider { max-width: 85%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Navigation Controls (Shrink / Minimize) -->
+  <a href="index.html" class="close-btn" aria-label="Minimize or go back">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Top-right corner inward -->
+      <path d="M15 3v6h6" />
+      <!-- Bottom-left corner inward -->
+      <path d="M9 21v-6H3" />
+      <!-- Diagonal arrow from top-right to center -->
+      <path d="M21 3l-7 7" />
+      <!-- Diagonal arrow from bottom-left to center -->
+      <path d="M3 21l7-7" />
+    </svg>
+  </a>
+
+  <div class="toggle-wrapper">
+    <div class="glass-toggle" id="view-toggle">
+      <div class="toggle-slider"></div>
+      <button class="toggle-btn active" data-target="detailed">Detailed</button>
+      <button class="toggle-btn" data-target="tldr">TL;DR</button>
+    </div>
+  </div>
+
+  <main class="case-study-container">
+    
+    <!-- Hero Section -->
+    <div class="hero-image">
+      <!-- Dynamic Video Background Integration -->
+      <video src="assets/Scene2.mp4" autoplay loop muted playsinline class="hero-video"></video>
+      <!-- Overlay and blur masks for Framer-style frosted edge effect -->
+      <div class="hero-video-overlay"></div>
+      <div class="hero-edge-blur"></div>
+
+      <div class="hero-content">
+        <h1 class="hero-title">When should we trust AI?</h1>
+        <p class="hero-subtitle">A UX research study exploring how people decide when to trust, verify, or reject AI-generated information.</p>
+        <div class="hero-divider"></div>
+      </div>
+    </div>
+
+    <div class="content-area">
+      <!-- =========================================================
+           DETAILED VIEW
+           ========================================================= -->
+      <article id="detailed" class="content-section active">
+        
+        <p>Exploring the behavioural factors behind AI trust - and how transparency, evidence, uncertainty and user control can make AI experiences feel safer and more understandable.</p>
+
+        <div class="meta-grid">
+          <div class="meta-item">
+            <h4>Role & Focus</h4>
+            <p>UX Researcher · Product Designer</p>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem !important;">Focus: UX Research, AI UX, Behavioural Research, Trust, Human-in-the-loop.</p>
+          </div>
+          <div class="meta-item">
+            <h4>Methods & Tools</h4>
+            <p>Mixed Methods Research</p>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem !important;">User Interviews, Diary Study, Usability Testing, Thematic Analysis.<br>Tools: FigJam, Figma, UserTesting.</p>
+          </div>
+        </div>
+
+        <span class="section-title">01 - The Research Question</span>
+        <h2>AI can give us an answer in seconds. But what makes us believe it?</h2>
+        <p>AI products are increasingly capable of generating answers, summaries, recommendations and decisions. But capability doesn't automatically create trust.</p>
+        
+        <p>Users may:</p>
+        <ul>
+          <li>accept an AI answer without checking it</li>
+          <li>verify information they don't fully understand</li>
+          <li>reject an answer even when it is correct</li>
+          <li>trust confident language more than evidence</li>
+          <li>become uncomfortable when they don't understand how AI reached an answer</li>
+        </ul>
+
+        <h3>Research question</h3>
+        <p>What makes users trust, question, or reject AI-generated information?</p>
+
+        <span class="section-title">02 - Research Hypothesis</span>
+        <h2>Framing the assumption</h2>
+        <p>Rather than starting with: <em>"Users don't trust AI."</em></p>
+        <p>I framed the hypothesis more carefully: <strong>Trust may not come from making AI appear more confident. It may come from making AI more understandable and controllable.</strong></p>
+        <p>This becomes something you test rather than assume.</p>
+
+        <span class="section-title">03 - Research Plan</span>
+        <h2>A structured framework for understanding trust</h2>
+        
+        <!-- Iframe 1: Framework -->
+        <div class="iframe-wrapper h-500">
+          <iframe src="project4/1.html" title="Research Framework"></iframe>
+        </div>
+
+        <span class="section-title">04 - Participant Profile</span>
+        <h2>Recruiting across the spectrum</h2>
+        <p>I recruited 12 participants split across three behavioral archetypes to capture a diversity of mental models:</p>
+        <ul>
+          <li><strong>AI Explorers:</strong> People who regularly use ChatGPT, Gemini, Claude etc.</li>
+          <li><strong>AI Pragmatists:</strong> People who use AI occasionally for specific tasks.</li>
+          <li><strong>AI Skeptics:</strong> People who actively question or avoid AI-generated information.</li>
+        </ul>
+
+        <span class="section-title">05 - Interview Approach</span>
+        <h2>Behaviour > Opinion</h2>
+        <p>Instead of asking: <em>"Do you trust AI?"</em></p>
+        <p>I asked: <em>"Tell me about the last time an AI tool gave you an answer you weren't sure about."</em></p>
+        <p>This allowed me to probe into their actual behavior: What made them question it? Did they verify it? Where? What would have made them more confident? This ensures we are documenting observed behavior rather than stated opinions.</p>
+
+        <span class="section-title">06 - Diary Study</span>
+        <h2>Trust happens in moments, not surveys.</h2>
+        <p>Participants documented interactions with AI for 5–7 days. We captured context, the AI output, their reaction, their verification steps, and their ultimate decision.</p>
+        
+        <div class="quote-box">
+          <p>The interesting insight isn't simply "the user didn't trust AI." It's: <strong>AI was trusted as a starting point, but not as evidence.</strong></p>
+        </div>
+
+        <!-- Iframe 4: Diary Study -->
+        <div class="iframe-wrapper h-800">
+          <iframe src="project4/4.html" title="Diary Study Results"></iframe>
+        </div>
+
+        <span class="section-title">07 - Usability Study</span>
+        <h2>Testing interface variables</h2>
+        <p>I created three versions of the same AI response to test exactly what drives confidence and action.</p>
+        <ul>
+          <li><strong>Version A:</strong> Answer only.</li>
+          <li><strong>Version B:</strong> Answer + explanation.</li>
+          <li><strong>Version C:</strong> Answer + evidence + control.</li>
+        </ul>
+        <p>Participants were asked to evaluate the recommendation, while we measured confidence, willingness to act, and perceived transparency.</p>
+
+        <!-- Iframe 6: Response Variants -->
+        <div class="iframe-wrapper h-850">
+          <iframe src="project4/6.html" title="AI Response Variants Experiment"></iframe>
+        </div>
+
+        <span class="section-title">08 - The Synthesis</span>
+        <h2>Finding the patterns</h2>
+        <p>Interview transcripts and diary logs were synthesized into an affinity map, organizing observations into core themes: Understanding, Verification, Control, Uncertainty, and Responsibility.</p>
+
+        <!-- Iframe 2: Artefacts -->
+        <div class="iframe-wrapper h-850">
+          <iframe src="project4/2.html" title="Interview Artefacts Synthesis Board"></iframe>
+        </div>
+
+        <!-- Iframe 3: Affinity Map -->
+        <div class="iframe-wrapper h-800">
+          <iframe src="project4/3.html" title="Affinity Map"></iframe>
+        </div>
+
+        <span class="section-title">09 - Key Research Insights</span>
+        <h2>What we learned</h2>
+        
+        <h3>1. Trust isn't binary.</h3>
+        <p>Users may trust AI for Discovery → Organisation → Summarisation, but hesitate when AI moves toward Recommendation → Decision → Action.</p>
+
+        <h3>2. Confidence isn't the same as credibility.</h3>
+        <p>A polished, confident response can feel convincing. But users become more comfortable when they can understand: Where did this come from? What information was used? Can I verify it?</p>
+
+        <h3>3. Users don't necessarily want more explanation.</h3>
+        <p>They want the right explanation at the right moment. Instead of exposing technical AI reasoning, surface useful evidence.</p>
+
+        <h3>4. Control is a trust mechanism.</h3>
+        <p>Trust increases when users can Inspect → Modify → Verify → Reject, rather than simply Accept → Continue.</p>
+
+        <span class="section-title">10 - The Trust Spectrum</span>
+        <h2>Mapping the interaction model</h2>
+        <p>AI interaction isn't simply "Trust AI" or "Don't trust AI". It exists on a spectrum. Different levels of risk require different levels of user control.</p>
+
+        <!-- Iframe 5: Trust Spectrum -->
+        <div class="iframe-wrapper h-650">
+          <iframe src="project4/5.html" title="The Trust Spectrum"></iframe>
+        </div>
+
+        <span class="section-title">11 - Opportunity Areas & Principles</span>
+        <h2>From Research to Product</h2>
+        <p>How do we turn these research insights into tangible product opportunities? We move from finding facts to defining design principles.</p>
+
+        <!-- Iframe 7: Research to Product Framework -->
+        <div class="iframe-wrapper h-800">
+          <iframe src="project4/7.html" title="Research to Product Framework"></iframe>
+        </div>
+
+        <span class="section-title">12 - Conceptual Direction</span>
+        <h2>AI should assist the decision, not silently make it</h2>
+        <p>If we apply these principles to a UI, the interface shifts. Instead of the AI simply saying "This is the best option," the AI explains the parameters, provides supporting evidence, and allows the user to adjust the criteria. It doesn't ask the user to trust it blindly-it helps the user evaluate it.</p>
+
+        <!-- Iframe 8: Human AI Editorial -->
+        <div class="iframe-wrapper h-650">
+          <iframe src="project4/8.html" title="Human and AI Editorial Visual"></iframe>
+        </div>
+
+        <span class="section-title">Outcome</span>
+        <h2>A framework for safer AI experiences</h2>
+        <p>The research framework turns AI trust into a product design problem. It helps teams identify when users need explanations, when evidence should be surfaced, when AI should communicate uncertainty, and when AI should step back and let humans decide.</p>
+
+        <div class="quote-box" style="margin-top: 4rem;">
+          <p style="font-size: 1.25rem;">"The goal isn't to make users trust AI more. It's to help users know when AI deserves their trust."</p>
+        </div>
+      </article>
+
+      <!-- =========================================================
+           TL;DR VIEW
+           ========================================================= -->
+      <article id="tldr" class="content-section">
+        <h1>Researching AI Trust: The Short Version</h1>
+        <ul class="tldr-list">
+          <li><strong>The Objective:</strong> Conduct mixed-methods research to understand what makes users trust, verify, or reject AI-generated information.</li>
+          <li><strong>The Process:</strong> Conducted User Interviews, a 5-day Diary Study, and Usability Testing (A/B/C variants) with 12 participants spanning AI Explorers to AI Skeptics.</li>
+          <li><strong>The Insight:</strong> Trust is not binary. Users readily trust AI for discovery, but demand evidence, control, and verifiable sources for decision-making. Confidence does not equal credibility.</li>
+        </ul>
+
+        <div class="impact-grid">
+          <div class="impact-card">
+            <h3>Evidence > Confidence</h3>
+            <p>Polished AI prose triggers skepticism. Verifiable source nodes increase trust.</p>
+          </div>
+          <div class="impact-card">
+            <h3>The Trust Spectrum</h3>
+            <p>Mapped user behavior from passive acceptance to active rejection based on risk.</p>
+          </div>
+          <div class="impact-card">
+            <h3>Control is Crucial</h3>
+            <p>Trust spikes when users are given an "escape hatch" to edit or modify AI output.</p>
+          </div>
+          <div class="impact-card">
+            <h3>Honest Uncertainty</h3>
+            <p>Users prefer AI that clearly communicates its limitations over false precision.</p>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <script>
+    // --- Global Theme Logic ---
+    const storedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
+      document.body.setAttribute('data-theme', 'dark');
+    }
+
+    window.addEventListener('storage', (event) => {
+      if (event.key !== 'theme') return;
+      if (event.newValue === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+      } else {
+        document.body.removeAttribute('data-theme');
+      }
+    });
+
+    // --- Toggle Logic (Detailed vs TL;DR) ---
+    const toggleContainer = document.getElementById('view-toggle');
+    const btns = document.querySelectorAll('.toggle-btn');
+    const sections = document.querySelectorAll('.content-section');
+
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        if(btn.dataset.target === 'tldr') {
+          toggleContainer.classList.add('tldr-active');
+        } else {
+          toggleContainer.classList.remove('tldr-active');
+        }
+
+        sections.forEach(sec => {
+          sec.classList.remove('active');
+          if(sec.id === btn.dataset.target) {
+            setTimeout(() => sec.classList.add('active'), 20);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

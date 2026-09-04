@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Data Display Cards — Before &amp; After</title>
+<style>
+  :root{
+    --ink:#0F1E3D;
+    --paper:#F7F5F0;
+    --line:#E4E0D6;
+    --orange:#E8792E;
+    --green-1:#0E6B3E;
+    --green-2:#0A4E2E;
+    --blue-1:#1B3F91;
+    --blue-2:#14306E;
+    --gold-1:#F2A71B;
+    --gold-2:#D98A0B;
+    --rust-1:#7A1E0E;
+    --rust-2:#C24A1B;
+    --red-1:#B0281F;
+    --red-2:#7E1712;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    font-family:'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    color:var(--ink);
+    padding:56px 48px 80px;
+  }
+  .wrap{max-width:1180px;margin:0 auto;}
+  .kicker{
+    font-size:13px;
+    letter-spacing:.04em;
+    color:#8A8474;
+    margin-bottom:6px;
+  }
+  h1{
+    font-size:30px;
+    margin:0 0 40px;
+    font-weight:700;
+  }
+  .stage{margin-bottom:64px;}
+  .stage-label{
+    display:inline-block;
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.06em;
+    padding:4px 12px;
+    border-radius:20px;
+    margin-bottom:18px;
+  }
+  .stage-label.before{background:#EDE9DF;color:#6B6656;}
+  .stage-label.after{background:var(--ink);color:#fff;}
+  .stage-note{
+    font-size:14px;
+    color:#5B5648;
+    margin:0 0 22px;
+    max-width:640px;
+    line-height:1.5;
+  }
+
+  /* BEFORE */
+  .before-panel{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:40px 36px;
+  }
+  .before-card{
+    border-left:3px solid var(--orange);
+    padding-left:18px;
+  }
+  .before-card .stat{
+    font-size:26px;
+    font-weight:700;
+    color:var(--ink);
+    margin:0 0 6px;
+  }
+  .before-card .sub{
+    font-size:13px;
+    color:#6B6656;
+    margin:0;
+  }
+  .before-top{margin-bottom:56px;}
+  .before-row{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:32px;
+  }
+
+  /* AFTER */
+  .after-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:2px;
+    background:#fff;
+    border-radius:6px;
+    overflow:hidden;
+  }
+  .after-card{
+    padding:28px 26px 30px;
+    color:#fff;
+    min-height:230px;
+    display:flex;
+    flex-direction:column;
+  }
+  .after-card .label{
+    font-size:13.5px;
+    font-weight:600;
+    margin:0 0 10px;
+    opacity:.95;
+  }
+  .after-card .stat{
+    font-size:34px;
+    font-weight:800;
+    margin:0 0 12px;
+    letter-spacing:-.01em;
+  }
+  .after-card .desc{
+    font-size:12.5px;
+    line-height:1.5;
+    opacity:.9;
+    margin:0 0 18px;
+    max-width:230px;
+  }
+  .visual{margin-top:auto;height:44px;}
+
+  .c1{background:linear-gradient(160deg,var(--green-1),var(--green-2));}
+  .c2{background:linear-gradient(160deg,var(--blue-1),var(--blue-2));}
+  .c3{background:linear-gradient(160deg,var(--gold-1),var(--gold-2));}
+  .c4{background:linear-gradient(160deg,var(--rust-2),var(--orange));}
+  .c5{background:linear-gradient(160deg,var(--blue-1),var(--blue-2));}
+  .c6{background:linear-gradient(160deg,var(--red-1),var(--red-2));}
+
+  /* mini visuals */
+  .bars{display:flex;align-items:flex-end;gap:5px;height:100%;}
+  .bars i{display:block;width:12px;background:rgba(255,255,255,.85);border-radius:2px 2px 0 0;}
+  .dots{display:grid;grid-template-columns:repeat(9,1fr);gap:4px;height:100%;align-content:center;}
+  .dots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.85);}
+  .dots i.dim{background:rgba(255,255,255,.28);}
+  .grad-block{display:flex;height:100%;border-radius:2px;overflow:hidden;}
+  .grad-block span{flex:1;}
+  .grad-block span:first-child{background:rgba(0,0,0,.35);}
+  .grad-block span:last-child{background:rgba(255,255,255,.35);}
+  .line-dots{display:flex;align-items:center;gap:10px;height:100%;}
+  .line-dots i{background:rgba(255,255,255,.9);border-radius:50%;}
+  .grid-pattern{display:grid;grid-template-columns:repeat(9,1fr);gap:3px;height:100%;}
+  .grid-pattern i{border-radius:1px;background:rgba(255,255,255,.35);}
+  .grid-pattern i.on{background:rgba(255,255,255,.8);}
+  .world{width:100%;height:100%;opacity:.8;}
+
+  .caption{
+    margin-top:18px;
+    font-size:12.5px;
+    color:#8A8474;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="kicker">Design system case study — component refinement</div>
+  <h1>Data display cards</h1>
+
+  <div class="stage">
+    <span class="stage-label before">Before</span>
+    <p class="stage-note">The original component repeated one placeholder value across every instance, with no way to distinguish one metric from another. Hierarchy relied on a single orange rule, regardless of what the data meant.</p>
+    <div class="before-panel">
+      <div class="before-top before-card">
+        <p class="stat">29 years</p>
+        <p class="sub">in tax-managed equity investing</p>
+      </div>
+      <div class="before-row">
+        <div class="before-card"><p class="stat">29 years</p><p class="sub">in tax-managed equity investing</p></div>
+        <div class="before-card"><p class="stat">29 years</p><p class="sub">in tax-managed equity investing</p></div>
+        <div class="before-card"><p class="stat">29 years</p><p class="sub">in tax-managed equity investing</p></div>
+        <div class="before-card"><p class="stat">29 years</p><p class="sub">in tax-managed equity investing</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <span class="stage-label after">After</span>
+    <p class="stage-note">Each card now carries its own color, icon-level visualization, and real content — so scale, geography, and tenure read as distinct facts at a glance, not five repeats of the same one.</p>
+    <div class="after-grid">
+      <div class="after-card c1">
+        <p class="label">Global assets under advice</p>
+        <p class="stat">$964B</p>
+        <p class="desc">We partner with clients to deliver tailored advice and investment solutions globally.</p>
+        <div class="visual bars">
+          <i style="height:30%"></i><i style="height:45%"></i><i style="height:40%"></i><i style="height:70%"></i><i style="height:100%"></i>
+        </div>
+      </div>
+      <div class="after-card c2">
+        <p class="label">Global assets under management</p>
+        <p class="stat">$418B</p>
+        <p class="desc">Our management expertise helps clients achieve their long-term investment goals.</p>
+        <div class="visual dots" id="dots1"></div>
+      </div>
+      <div class="after-card c3">
+        <p class="label">Assets traded</p>
+        <p class="stat">$2.0T</p>
+        <p class="desc">Execution excellence across global markets with scale, speed, and precision.</p>
+        <div class="visual grad-block"><span></span><span></span></div>
+      </div>
+      <div class="after-card c4">
+        <p class="label">Serving clients in</p>
+        <p class="stat">31 countries</p>
+        <p class="desc">A truly global presence, delivering local insight with world-class capabilities.</p>
+        <div class="visual line-dots">
+          <i style="width:5px;height:5px;"></i><i style="width:7px;height:7px;"></i><i style="width:9px;height:9px;"></i><i style="width:12px;height:12px;"></i><i style="width:16px;height:16px;"></i><i style="width:20px;height:20px;"></i>
+        </div>
+      </div>
+      <div class="after-card c5">
+        <p class="label">Manager products</p>
+        <p class="stat">15k+</p>
+        <p class="desc">A diverse range of investment solutions across asset classes and strategies.</p>
+        <svg class="visual world" viewBox="0 0 200 44" preserveAspectRatio="xMidYMid meet">
+          <!-- simple dotted world abstraction -->
+          <g fill="rgba(255,255,255,.55)">
+          </g>
+        </svg>
+        <div class="visual dots" id="dots2"></div>
+      </div>
+      <div class="after-card c6">
+        <p class="label">In business since</p>
+        <p class="stat">90 years</p>
+        <p class="desc">Nine decades of experience, innovation, and unwavering client commitment.</p>
+        <div class="visual grid-pattern" id="grid1"></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="caption">Recreated for portfolio presentation from the original Figma component set, Digital Design Ecosystem.</p>
+</div>
+
+<script>
+  function fillDots(id, total, litRatio){
+    const el = document.getElementById(id);
+    for(let i=0;i<total;i++){
+      const d = document.createElement('i');
+      if(i > total*litRatio) d.className='dim';
+      el.appendChild(d);
+    }
+  }
+  fillDots('dots1', 45, 0.55);
+  fillDots('dots2', 45, 0.4);
+
+  function fillGrid(id, total, litRatio){
+    const el = document.getElementById(id);
+    for(let i=0;i<total;i++){
+      const d = document.createElement('i');
+      if(Math.random() < litRatio) d.classList.add('on');
+      el.appendChild(d);
+    }
+  }
+  fillGrid('grid1', 36, 0.55);
+</script>
+</body>
+</html>

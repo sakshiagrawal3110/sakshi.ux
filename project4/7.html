@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Response Variants - Research Experiment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f3f2ee;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .experiment {
+            max-width: 1380px;
+            width: 100%;
+            background: #faf9f6;
+            border-radius: 28px;
+            border: 1px solid #e3e1db;
+            padding: 2.5rem 2.5rem 2rem 2.5rem;
+            box-shadow: 0 12px 48px -16px rgba(0, 0, 0, 0.05);
+        }
+
+        /* header */
+        .experiment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-bottom: 1px solid #e8e6e0;
+            padding-bottom: 1rem;
+        }
+
+        .experiment-header .title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .experiment-header h2 {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #2a2926;
+            letter-spacing: -0.01em;
+        }
+
+        .experiment-header .subtitle {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: #6f6e69;
+            line-height: 1.4;
+        }
+
+        .experiment-header .subtitle .highlight {
+            background: #f0ede6;
+            padding: 0.05rem 0.3rem;
+            border-radius: 3px;
+            color: #4a433a;
+        }
+
+        .experiment-header .meta-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem 1.5rem;
+            align-items: center;
+        }
+
+        .experiment-header .meta-item {
+            font-size: 0.55rem;
+            font-weight: 400;
+            color: #8f8e89;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .experiment-header .meta-item .num {
+            font-weight: 500;
+            color: #4a4945;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+        }
+
+        .experiment-header .meta-item .dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #d6d4ce;
+            display: inline-block;
+        }
+
+        /* variants grid */
+        .variants-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+        }
+
+        /* variant card */
+        .variant {
+            background: #ffffff;
+            border: 1px solid #e8e6e0;
+            border-radius: 16px;
+            padding: 1.5rem 1.5rem 1.25rem 1.5rem;
+            transition: all 0.15s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.01);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .variant:hover {
+            border-color: #ceccc4;
+            box-shadow: 0 6px 20px -12px rgba(0, 0, 0, 0.06);
+            transform: translateY(-2px);
+        }
+
+        .variant .variant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #f0efec;
+        }
+
+        .variant .variant-label {
+            font-size: 0.55rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #4a4945;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .variant .variant-label .badge {
+            font-weight: 400;
+            font-size: 0.45rem;
+            color: #8f8e89;
+            background: #f5f4f0;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            border: 1px solid #e8e6e0;
+        }
+
+        .variant .variant-tag {
+            font-size: 0.45rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #8f8e89;
+            background: #f5f4f0;
+            padding: 0.1rem 0.6rem;
+            border-radius: 100px;
+            border: 1px solid #e8e6e0;
+        }
+
+        .variant .variant-tag.control {
+            background: #e6f0ea;
+            border-color: #c8d8d0;
+            color: #2d4a3d;
+        }
+
+        .variant .variant-tag.explanation {
+            background: #e6edf5;
+            border-color: #c8d0d8;
+            color: #2d3d4a;
+        }
+
+        .variant .variant-tag.basic {
+            background: #f5f4f0;
+            border-color: #e3e1db;
+            color: #6f6e69;
+        }
+
+        /* AI response mock */
+        .ai-response {
+            background: #f8f7f4;
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            border: 1px solid #edebe8;
+            margin: 0.5rem 0 0.75rem 0;
+            flex: 1;
+        }
+
+        .ai-response .response-label {
+            font-size: 0.45rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #b3b1ab;
+            margin-bottom: 0.4rem;
+        }
+
+        .ai-response .response-text {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: #2d2c29;
+            line-height: 1.6;
+        }
+
+        .ai-response .response-text .highlight {
+            background: #faf0d7;
+            padding: 0.05rem 0.2rem;
+            border-radius: 2px;
+            font-weight: 500;
+        }
+
+        .ai-response .response-text .highlight-blue {
+            background: #e6edf5;
+            padding: 0.05rem 0.2rem;
+            border-radius: 2px;
+            font-weight: 500;
+            color: #2d3d4a;
+        }
+
+        .ai-response .response-text .highlight-green {
+            background: #e6f0ea;
+            padding: 0.05rem 0.2rem;
+            border-radius: 2px;
+            font-weight: 500;
+            color: #2d4a3d;
+        }
+
+        .ai-response .response-text .muted {
+            color: #9a9892;
+            font-weight: 300;
+        }
+
+        /* explanation / evidence blocks */
+        .explanation-block {
+            font-size: 0.6rem;
+            color: #5a5954;
+            background: #f5f6f8;
+            padding: 0.6rem 0.8rem;
+            border-radius: 8px;
+            border-left: 3px solid #b8c4c9;
+            margin: 0.5rem 0;
+            line-height: 1.5;
+        }
+
+        .explanation-block .label {
+            font-size: 0.45rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #8f8e89;
+            display: block;
+            margin-bottom: 0.15rem;
+        }
+
+        .control-block {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin: 0.5rem 0;
+            padding: 0.5rem 0.6rem;
+            background: #f5f7f5;
+            border-radius: 8px;
+            border: 1px solid #e0e8e4;
+        }
+
+        .control-block .ctrl-item {
+            font-size: 0.5rem;
+            font-weight: 400;
+            color: #3d4a3d;
+            background: #ffffff;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #d8e0dc;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .control-block .ctrl-item .icon {
+            font-size: 0.6rem;
+        }
+
+        /* component indicators */
+        .component-indicators {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .component-indicators .comp {
+            font-size: 0.45rem;
+            font-weight: 400;
+            color: #8f8e89;
+            background: #f5f4f0;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            border: 1px solid #e8e6e0;
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .component-indicators .comp.present {
+            color: #4a4945;
+            background: #f0efeb;
+            border-color: #d6d4ce;
+        }
+
+        .component-indicators .comp .check {
+            color: #5a7a6b;
+        }
+
+        .component-indicators .comp .cross {
+            color: #c4b8b8;
+        }
+
+        /* measurement section */
+        .measurements {
+            border-top: 2px solid #e8e6e0;
+            padding-top: 2rem;
+            margin-top: 0.5rem;
+        }
+
+        .measurements .section-label {
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #8f8e89;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .measurements .section-label .line {
+            flex: 1;
+            height: 1px;
+            background: #e8e6e0;
+        }
+
+        .measurements-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        .measure-item {
+            background: #ffffff;
+            border: 1px solid #e8e6e0;
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            transition: all 0.1s ease;
+        }
+
+        .measure-item:hover {
+            border-color: #ceccc4;
+        }
+
+        .measure-item .measure-label {
+            font-size: 0.5rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #8f8e89;
+            margin-bottom: 0.5rem;
+        }
+
+        .measure-item .measure-bars {
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-end;
+            height: 60px;
+            padding-top: 0.25rem;
+        }
+
+        .measure-item .measure-bars .bar-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .measure-item .measure-bars .bar {
+            width: 100%;
+            max-width: 24px;
+            min-height: 8px;
+            border-radius: 4px;
+            background: #f0efec;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .measure-item .measure-bars .bar .fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .measure-item .measure-bars .bar .fill.a {
+            background: #d4c5b2;
+        }
+        .measure-item .measure-bars .bar .fill.b {
+            background: #b8c9c9;
+        }
+        .measure-item .measure-bars .bar .fill.c {
+            background: #c9c4b8;
+        }
+
+        .measure-item .measure-bars .bar-label {
+            font-size: 0.4rem;
+            font-weight: 400;
+            color: #b3b1ab;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .measure-item .measure-note {
+            font-size: 0.5rem;
+            font-weight: 400;
+            color: #9a9892;
+            margin-top: 0.5rem;
+            text-align: center;
+            line-height: 1.4;
+            padding-top: 0.4rem;
+            border-top: 1px solid #f0efec;
+        }
+
+        .measure-item .measure-note .em {
+            color: #5a5954;
+            font-weight: 500;
+        }
+
+        /* expected trend indicator */
+        .trend-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 0.25rem;
+            font-size: 0.5rem;
+            color: #9a9892;
+        }
+
+        .trend-indicator .arrow-up {
+            color: #5a7a6b;
+            font-size: 0.7rem;
+        }
+
+        .trend-indicator .arrow-down {
+            color: #c4b8b8;
+            font-size: 0.7rem;
+        }
+
+        /* footer */
+        .experiment-footer {
+            margin-top: 2rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid #e8e6e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .experiment-footer .note {
+            font-size: 0.6rem;
+            color: #9a9892;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .experiment-footer .note .em {
+            color: #5a5954;
+            font-weight: 500;
+        }
+
+        .experiment-footer .tag-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .experiment-footer .tag-group .ftag {
+            font-size: 0.5rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #8f8e89;
+            background: #f0efeb;
+            padding: 0.15rem 0.6rem;
+            border-radius: 100px;
+            border: 1px solid #e3e1db;
+        }
+
+        /* responsive */
+        @media (max-width: 1200px) {
+            .experiment {
+                padding: 2rem 1.5rem 1.5rem 1.5rem;
+            }
+            .variants-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .measurements-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 820px) {
+            .experiment {
+                padding: 1.5rem 1rem 1.25rem 1rem;
+                border-radius: 20px;
+            }
+            .variants-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .measurements-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 0.75rem;
+            }
+            .experiment-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .measure-item .measure-bars {
+                height: 50px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .measurements-grid {
+                grid-template-columns: 1fr;
+            }
+            .variant {
+                padding: 1.25rem;
+            }
+            .experiment-footer {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="experiment">
+
+        <!-- header -->
+        <div class="experiment-header">
+            <div class="title-group">
+                <h2>AI response variants - research experiment</h2>
+                <div class="subtitle">
+                    Testing how <span class="highlight">explanation, evidence, and control</span> 
+                    affect trust, verification, and willingness to act
+                </div>
+            </div>
+            <div class="meta-group">
+                <span class="meta-item"><span class="num">3</span> variants</span>
+                <span class="meta-item"><span class="num">12</span> participants</span>
+                <span class="meta-item"><span class="num">4</span> measures</span>
+                <span class="meta-item">usability study · 2026</span>
+            </div>
+        </div>
+
+        <!-- variants grid -->
+        <div class="variants-grid">
+
+            <!-- Variant A: Answer only -->
+            <div class="variant">
+                <div class="variant-header">
+                    <span class="variant-label">
+                        Variant A
+                        <span class="badge">control</span>
+                    </span>
+                    <span class="variant-tag basic">answer only</span>
+                </div>
+
+                <div class="ai-response">
+                    <div class="response-label">AI response</div>
+                    <div class="response-text">
+                        <span class="highlight">Recommended: Fund A</span>
+                        <span class="muted"> - based on your profile.</span>
+                    </div>
+                </div>
+
+                <div style="font-size:0.5rem; color:#b3b1ab; margin-top:0.25rem; text-align:center; border-top:1px solid #f0efec; padding-top:0.5rem;">
+                    <span>No explanation · No evidence · No control</span>
+                </div>
+
+                <div class="component-indicators" style="justify-content:center;">
+                    <span class="comp"><span class="cross">✕</span> Explanation</span>
+                    <span class="comp"><span class="cross">✕</span> Evidence</span>
+                    <span class="comp"><span class="cross">✕</span> Control</span>
+                </div>
+            </div>
+
+            <!-- Variant B: Answer + explanation -->
+            <div class="variant">
+                <div class="variant-header">
+                    <span class="variant-label">
+                        Variant B
+                        <span class="badge">explanation</span>
+                    </span>
+                    <span class="variant-tag explanation">answer + explanation</span>
+                </div>
+
+                <div class="ai-response">
+                    <div class="response-label">AI response</div>
+                    <div class="response-text">
+                        <span class="highlight">Recommended: Fund A</span>
+                        <span class="muted"> based on your</span>
+                        <span class="highlight-blue">selected risk preference</span>
+                        <span class="muted"> and</span>
+                        <span class="highlight-blue">5-year performance</span>
+                        <span class="muted">.</span>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <span class="label">why this recommendation</span>
+                    Fund A aligns with your <span style="font-weight:500; color:#3d4a4a;">moderate risk</span> preference 
+                    and has shown <span style="font-weight:500; color:#3d4a4a;">consistent returns</span> over the last 5 years.
+                </div>
+
+                <div style="font-size:0.5rem; color:#b3b1ab; margin-top:0.25rem; text-align:center; border-top:1px solid #f0efec; padding-top:0.5rem;">
+                    <span>Explanation provided · No evidence · No control</span>
+                </div>
+
+                <div class="component-indicators" style="justify-content:center;">
+                    <span class="comp present"><span class="check">✓</span> Explanation</span>
+                    <span class="comp"><span class="cross">✕</span> Evidence</span>
+                    <span class="comp"><span class="cross">✕</span> Control</span>
+                </div>
+            </div>
+
+            <!-- Variant C: Answer + evidence + control -->
+            <div class="variant">
+                <div class="variant-header">
+                    <span class="variant-label">
+                        Variant C
+                        <span class="badge">full transparency</span>
+                    </span>
+                    <span class="variant-tag control">answer + evidence + control</span>
+                </div>
+
+                <div class="ai-response">
+                    <div class="response-label">AI response</div>
+                    <div class="response-text">
+                        <span class="highlight">Recommended: Fund A</span>
+                        <span class="muted"> based on your</span>
+                        <span class="highlight-blue">selected risk preference</span>
+                        <span class="muted"> and</span>
+                        <span class="highlight-blue">5-year performance</span>
+                        <span class="muted">.</span>
+                    </div>
+                </div>
+
+                <div class="explanation-block" style="border-left-color:#b8c4b8; background:#f5f8f5;">
+                    <span class="label">why this recommendation</span>
+                    Fund A aligns with your <span style="font-weight:500; color:#3d4a3d;">moderate risk</span> preference 
+                    and has shown <span style="font-weight:500; color:#3d4a3d;">consistent returns</span> over the last 5 years.
+                </div>
+
+                <div class="explanation-block" style="border-left-color:#c4b8b8; background:#f8f5f5; margin-top:0.25rem;">
+                    <span class="label">supporting data</span>
+                    <span style="font-size:0.55rem;">5-year return: +8.2% · Risk score: 4.2/10 · Diversification: high</span>
+                    <div style="font-size:0.5rem; color:#8f8e89; margin-top:0.2rem;">↳ Source: Q1 2026 performance report · verified</div>
+                </div>
+
+                <div class="control-block">
+                    <span class="ctrl-item"><span class="icon">✎</span> Change criteria</span>
+                    <span class="ctrl-item"><span class="icon">🔍</span> View data</span>
+                    <span class="ctrl-item"><span class="icon">↺</span> Recalculate</span>
+                    <span class="ctrl-item"><span class="icon">✕</span> Reject</span>
+                </div>
+
+                <div style="font-size:0.5rem; color:#b3b1ab; margin-top:0.25rem; text-align:center; border-top:1px solid #f0efec; padding-top:0.5rem;">
+                    <span>Explanation · Evidence · Full control</span>
+                </div>
+
+                <div class="component-indicators" style="justify-content:center;">
+                    <span class="comp present"><span class="check">✓</span> Explanation</span>
+                    <span class="comp present"><span class="check">✓</span> Evidence</span>
+                    <span class="comp present"><span class="check">✓</span> Control</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- measurements -->
+        <div class="measurements">
+            <div class="section-label">
+                <span>What changes?</span>
+                <span class="line"></span>
+                <span style="font-weight:400; color:#b3b1ab; font-size:0.5rem;">expected trends · n=12</span>
+            </div>
+
+            <div class="measurements-grid">
+
+                <!-- Confidence -->
+                <div class="measure-item">
+                    <div class="measure-label">Confidence</div>
+                    <div class="measure-bars">
+                        <div class="bar-group">
+                            <div class="bar">
+                                <div class="fill a" style="height:40%;"></div>
+                            </div>
+                            <span class="bar-label">A</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar">
+                                <div class="fill b" style="height:65%;"></div>
+                            </div>
+                            <span class="bar-label">B</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar">
+                                <div class="fill c" style="height:85%;"></div>
+                            </div>
+                            <span class="bar-label">C</span>
+                        </div>
+                    </div>
+                    <div class="measure-note">
+                        <span class="em">↑ 45%</span> from A to C
+                        <div class="trend-indicator">
+                            <span class="arrow-up">▲</span> increases with explanation + evidence
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Verification -->
+                <div class="measure-item">
+                    <div class="measure-label">Verification behaviour</div>
+                    <div class="measure-bars">
+                        <div class="bar-group">
+                            <div class="bar">
+                                <div class="fill a" style="height:80%;"></div>
+                            </div>
+                            <span class="bar-label">A</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar">
+                                <div class="fill b" style="height:55%;"></div>
+                            </div>
+                            <span class="bar-label">B</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar">
+                                <div class="fill c" style="height:30%;"></div>
+                            </div>
+                            <span class="bar-label">C</span>
+                        </div>
+                    </div>
+                    <div class="measure-note">
+                        <span class="em">↓ 62%</span> from A to C
+                        <div class="trend-indicator">
+                            <span class="arrow-down">▼</span> decreases with transparency
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Control -->
+                <div class="measure-item">
+                    <div class="measure-label">Perceived control</div>
+                    <div class="measure-bars">
+                        <div class="bar-group">
+                            <div class="bar">
+                                <div class="fill a" style="height:15%;"></div>
+                            </div>
+                            <span class="bar-label">A</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar">
+                                <div class="fill b" style="height:35%;"></div>
+                            </div>
+                            <span class="bar-label">B</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar">
+                                <div class="fill c" style="height:90%;"></div>
+                            </div>
+                            <span class="bar-label">C</span>
+                        </div>
+                    </div>
+                    <div class="measure-note">
+                        <span class="em">↑ 6×</span> from A to C
+                        <div class="trend-indicator">
+                            <span class="arrow-up">▲</span> control mechanisms drive trust
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Willingness to act -->
+                <div class="measure-item">
+                    <div class="measure-label">Willingness to act</div>
+                    <div class="measure-bars">
+                        <div class="bar-group">
+                            <div class="bar">
+                                <div class="fill a" style="height:30%;"></div>
+                            </div>
+                            <span class="bar-label">A</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar">
+                                <div class="fill b" style="height:55%;"></div>
+                            </div>
+                            <span class="bar-label">B</span>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar">
+                                <div class="fill c" style="height:80%;"></div>
+                            </div>
+                            <span class="bar-label">C</span>
+                        </div>
+                    </div>
+                    <div class="measure-note">
+                        <span class="em">↑ 167%</span> from A to C
+                        <div class="trend-indicator">
+                            <span class="arrow-up">▲</span> confidence + control = action
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- footer -->
+        <div class="experiment-footer">
+            <div class="note">
+                <span>Expected trends based on</span>
+                <span class="em">12 participants</span>
+                <span>· usability testing · 2026</span>
+            </div>
+            <div class="tag-group">
+                <span class="ftag">A/B/C test</span>
+                <span class="ftag">within-subjects</span>
+                <span class="ftag">measures: confidence · verification · control · action</span>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

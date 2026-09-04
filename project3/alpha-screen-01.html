@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Clinical Workspace - Screen Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16302C;
+    --paper:#F3F7F6;
+    --line:#DDE7E3;
+    --teal:#0E7C6E;
+    --teal-dark:#0A5A50;
+    --teal-light:#E4F3F0;
+    --amber:#C97A2B;
+    --amber-light:#FBEEDF;
+    --green:#1E8A5F;
+    --ink-soft:#5B6D68;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#DDD8CB;
+    font-family:'Inter','Segoe UI',Arial,sans-serif;
+    color:var(--ink);
+    padding:40px;
+  }
+  .device{
+    max-width:1440px;margin:0 auto;background:#fff;border-radius:14px;
+    box-shadow:0 20px 60px rgba(15,40,35,.18);overflow:hidden;
+  }
+  .browser-bar{display:flex;align-items:center;gap:14px;padding:12px 18px;background:#EAE6DB;border-bottom:1px solid var(--line);}
+  .dots{display:flex;gap:6px;}
+  .dots span{width:10px;height:10px;border-radius:50%;background:#CFC9B8;}
+  .url-pill{flex:1;background:#fff;border-radius:6px;padding:5px 14px;font-size:11.5px;color:var(--ink-soft);}
+
+  .app{display:grid;grid-template-columns:220px 1fr 300px;min-height:1024px;background:var(--paper);}
+
+  /* Left sidebar */
+  .sidebar{background:#fff;border-right:1px solid var(--line);padding:24px 18px;display:flex;flex-direction:column;}
+  .brand{font-size:14px;font-weight:700;margin-bottom:32px;display:flex;align-items:center;gap:8px;}
+  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--teal);}
+  .nav-label{font-size:10.5px;font-weight:700;letter-spacing:.06em;color:var(--ink-soft);text-transform:uppercase;margin:0 0 10px 10px;}
+  .nav-item{
+    display:flex;align-items:center;gap:11px;
+    padding:9px 10px;border-radius:7px;font-size:13px;color:var(--ink-soft);font-weight:500;
+    margin-bottom:2px;
+  }
+  .nav-item .ic{width:16px;text-align:center;font-size:13px;}
+  .nav-item.active{background:var(--teal-light);color:var(--teal-dark);font-weight:600;}
+  .sidebar-bottom{margin-top:auto;padding-top:20px;border-top:1px solid var(--line);}
+  .clinician{display:flex;align-items:center;gap:10px;margin-top:14px;}
+  .clinician .avatar{width:32px;height:32px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;}
+  .clinician .name{font-size:12.5px;font-weight:600;}
+  .clinician .role{font-size:10.5px;color:var(--ink-soft);}
+
+  /* Main */
+  .main{padding:32px 36px;}
+  .patient-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px;}
+  .p-name{font-size:22px;font-weight:700;margin:0 0 4px;}
+  .p-meta{font-size:12.5px;color:var(--ink-soft);}
+  .visit-tag{
+    text-align:right;font-size:12.5px;color:var(--ink-soft);
+  }
+  .visit-tag b{display:block;color:var(--ink);font-size:13px;margin-bottom:2px;}
+  .visit-type{
+    display:inline-block;background:var(--teal-light);color:var(--teal-dark);
+    font-size:11px;font-weight:600;padding:4px 10px;border-radius:12px;margin-top:6px;
+  }
+
+  .summary-card{
+    display:flex;background:#fff;border:1px solid var(--line);border-radius:10px;
+    padding:16px 20px;margin-bottom:26px;
+  }
+  .summary-item{flex:1;padding:0 18px;border-right:1px solid var(--line);}
+  .summary-item:first-child{padding-left:0;}
+  .summary-item:last-child{border-right:none;}
+  .summary-item .lbl{font-size:10.5px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.03em;margin-bottom:5px;}
+  .summary-item .val{font-size:14px;font-weight:600;}
+  .summary-item.alert .val{color:var(--amber);}
+
+  .consult-card{
+    background:linear-gradient(160deg,#fff, #F7FBFA);
+    border:1px solid var(--line);border-radius:14px;
+    padding:52px 40px;text-align:center;
+  }
+  .consult-tag{font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--ink-soft);text-transform:uppercase;margin:0 0 10px;}
+  .consult-title{font-size:22px;font-weight:700;margin:0 0 6px;}
+  .consult-sub{font-size:13px;color:var(--ink-soft);margin:0 0 30px;}
+  .btn-start{
+    background:var(--teal);color:#fff;border:none;border-radius:9px;
+    padding:14px 34px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:14px;
+  }
+  .btn-manual{background:none;border:none;color:var(--teal-dark);font-size:12.5px;font-weight:600;cursor:pointer;text-decoration:underline;}
+
+  /* Right panel */
+  .right-panel{background:#fff;border-left:1px solid var(--line);padding:28px 24px;}
+  .ai-badge{
+    width:34px;height:34px;border-radius:9px;background:var(--teal-light);color:var(--teal-dark);
+    display:flex;align-items:center;justify-content:center;font-size:15px;margin-bottom:14px;
+  }
+  .ai-title{font-size:13.5px;font-weight:700;margin:0 0 8px;}
+  .ai-desc{font-size:12px;color:var(--ink-soft);line-height:1.6;margin:0 0 26px;}
+  .control-label{font-size:10.5px;font-weight:700;letter-spacing:.05em;color:var(--ink-soft);text-transform:uppercase;margin:0 0 12px;}
+  .control-item{display:flex;gap:9px;font-size:12px;color:var(--ink);line-height:1.5;margin-bottom:12px;}
+  .control-item .check{color:var(--green);font-weight:700;flex:none;}
+
+  /* Interactive states */
+  .nav-item{cursor:pointer;}
+  .consult-state{display:none;}
+  .consult-state.active{display:block;}
+
+  .live-badge{
+    display:inline-flex;align-items:center;gap:7px;
+    background:var(--amber-light);color:var(--amber);
+    font-size:11px;font-weight:700;padding:5px 12px;border-radius:12px;margin-bottom:16px;
+  }
+  .live-dot{width:7px;height:7px;border-radius:50%;background:var(--amber);animation:blink 1.1s ease-in-out infinite;}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:.25;}}
+  .timer{font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;margin:0 0 26px;}
+  .btn-end{
+    background:#fff;color:#B4442C;border:1.5px solid #E7C3B4;border-radius:9px;
+    padding:12px 30px;font-size:13.5px;font-weight:700;cursor:pointer;
+  }
+
+  .manual-box{text-align:left;}
+  .manual-textarea{
+    width:100%;min-height:130px;border:1px solid var(--line);border-radius:8px;
+    padding:14px;font-size:13px;font-family:inherit;color:var(--ink);resize:vertical;margin-bottom:14px;outline:none;
+  }
+  .manual-textarea:focus{border-color:var(--teal);}
+  .manual-actions{display:flex;gap:10px;justify-content:flex-end;}
+  .btn-cancel{background:none;border:none;color:var(--ink-soft);font-size:12.5px;font-weight:600;cursor:pointer;}
+  .btn-save{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:12.5px;font-weight:700;cursor:pointer;}
+
+  .ai-status{display:none;align-items:center;gap:8px;margin-bottom:16px;font-size:11.5px;font-weight:700;color:var(--teal-dark);}
+  .ai-status.active{display:flex;}
+  .ai-status .pulse{width:7px;height:7px;border-radius:50%;background:var(--teal);animation:blink 1.1s ease-in-out infinite;}
+  .draft-note{
+    display:none;background:var(--teal-light);border-radius:8px;padding:14px 16px;
+    font-size:11.5px;color:var(--ink);line-height:1.6;margin-top:6px;
+  }
+  .draft-note.active{display:block;}
+  .draft-note .lbl{font-size:10px;font-weight:700;letter-spacing:.04em;color:var(--teal-dark);margin-bottom:6px;text-transform:uppercase;}
+</style>
+</head>
+<body>
+<div class="device">
+  <div class="browser-bar">
+    <div class="dots"><span></span><span></span><span></span></div>
+    <div class="url-pill">alpha.clinicalworkspace.app/patients/sarah-mitchell</div>
+  </div>
+
+  <div class="app">
+    <div class="sidebar">
+      <div class="brand"><span class="dot"></span>Alpha</div>
+      <p class="nav-label">Care</p>
+      <div class="nav-item"><span class="ic">▤</span>Dashboard</div>
+      <div class="nav-item active"><span class="ic">◐</span>Patients</div>
+      <div class="nav-item"><span class="ic">▦</span>Appointments</div>
+      <div class="nav-item"><span class="ic">✎</span>Notes</div>
+      <div class="nav-item"><span class="ic">▧</span>Documents</div>
+
+      <div class="sidebar-bottom">
+        <div class="nav-item"><span class="ic">⚙</span>Settings</div>
+        <div class="clinician">
+          <div class="avatar">MP</div>
+          <div>
+            <p class="name">Dr. Maya Patel</p>
+            <p class="role">Family Medicine</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="patient-header">
+        <div>
+          <p class="p-name">Sarah Mitchell</p>
+          <p class="p-meta">34 years · Female</p>
+        </div>
+        <div class="visit-tag">
+          <b>09:30 AM · 30 min</b>
+          Follow-up consultation
+          <span class="visit-type">In progress today</span>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-item">
+          <p class="lbl">Reason for visit</p>
+          <p class="val">Recurring headaches</p>
+        </div>
+        <div class="summary-item">
+          <p class="lbl">Last consultation</p>
+          <p class="val">18 Aug 2026</p>
+        </div>
+        <div class="summary-item">
+          <p class="lbl">Current medications</p>
+          <p class="val">2 active</p>
+        </div>
+        <div class="summary-item alert">
+          <p class="lbl">Alerts</p>
+          <p class="val">1</p>
+        </div>
+      </div>
+
+      <div class="consult-card">
+        <div class="consult-state active" id="stateNotStarted">
+          <p class="consult-tag">Today's consultation</p>
+          <p class="consult-title">Not started</p>
+          <p class="consult-sub">Ready when you are.</p>
+          <div>
+            <button class="btn-start" id="startBtn">Start consultation</button>
+          </div>
+          <button class="btn-manual" id="manualBtn">Enter notes manually</button>
+        </div>
+
+        <div class="consult-state" id="stateInProgress">
+          <div class="live-badge"><span class="live-dot"></span>CONSULTATION IN PROGRESS</div>
+          <p class="timer" id="timerDisplay">00:00</p>
+          <button class="btn-end" id="endBtn">End consultation</button>
+        </div>
+
+        <div class="consult-state" id="stateManual">
+          <div class="manual-box">
+            <p class="consult-tag">Manual notes</p>
+            <textarea class="manual-textarea" placeholder="Enter consultation notes…"></textarea>
+            <div class="manual-actions">
+              <button class="btn-cancel" id="manualCancelBtn">Cancel</button>
+              <button class="btn-save" id="manualSaveBtn">Save notes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <div class="ai-badge">✦</div>
+      <p class="ai-title">AI documentation assistant</p>
+      <div class="ai-status" id="aiStatus"><span class="pulse"></span>LISTENING</div>
+      <p class="ai-desc">During your consultation, I'll help organise relevant information into a draft note for your review.</p>
+      <div class="draft-note" id="draftNote">
+        <p class="lbl">Draft - awaiting your review</p>
+        Patient reports recurring headaches, frequency increasing over the past two weeks. No changes to current medication reported.
+      </div>
+
+      <p class="control-label" style="margin-top:26px;">Your control</p>
+      <div class="control-item"><span class="check">✓</span>You review every AI-generated section</div>
+      <div class="control-item"><span class="check">✓</span>You can edit or remove content</div>
+      <div class="control-item"><span class="check">✓</span>Nothing is added to the clinical record automatically</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const stateNotStarted = document.getElementById('stateNotStarted');
+  const stateInProgress = document.getElementById('stateInProgress');
+  const stateManual = document.getElementById('stateManual');
+  const aiStatus = document.getElementById('aiStatus');
+  const draftNote = document.getElementById('draftNote');
+  const timerDisplay = document.getElementById('timerDisplay');
+
+  let timerInterval = null;
+  let draftTimeout = null;
+  let seconds = 0;
+
+  function showConsultState(el){
+    [stateNotStarted, stateInProgress, stateManual].forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function formatTime(s){
+    const m = String(Math.floor(s / 60)).padStart(2, '0');
+    const sec = String(s % 60).padStart(2, '0');
+    return `${m}:${sec}`;
+  }
+
+  document.getElementById('startBtn').addEventListener('click', () => {
+    showConsultState(stateInProgress);
+    aiStatus.classList.add('active');
+    seconds = 0;
+    timerDisplay.textContent = '00:00';
+    timerInterval = setInterval(() => {
+      seconds++;
+      timerDisplay.textContent = formatTime(seconds);
+    }, 1000);
+    draftTimeout = setTimeout(() => draftNote.classList.add('active'), 4000);
+  });
+
+  document.getElementById('endBtn').addEventListener('click', () => {
+    clearInterval(timerInterval);
+    clearTimeout(draftTimeout);
+    aiStatus.classList.remove('active');
+    draftNote.classList.remove('active');
+    showConsultState(stateNotStarted);
+  });
+
+  document.getElementById('manualBtn').addEventListener('click', () => showConsultState(stateManual));
+  document.getElementById('manualCancelBtn').addEventListener('click', () => showConsultState(stateNotStarted));
+  document.getElementById('manualSaveBtn').addEventListener('click', () => showConsultState(stateNotStarted));
+
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trust Spectrum - AI Trust Research</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f3f2ee;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .spectrum-container {
+            max-width: 1200px;
+            width: 100%;
+            background: #faf9f6;
+            border-radius: 28px;
+            border: 1px solid #e3e1db;
+            padding: 3rem 3.5rem 3rem 3.5rem;
+            box-shadow: 0 12px 48px -16px rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        /* subtle background texture */
+        .spectrum-container::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 40%;
+            height: 40%;
+            background: radial-gradient(circle at 100% 100%, rgba(235, 233, 227, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        /* header */
+        .spectrum-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-bottom: 1px solid #e8e6e0;
+            padding-bottom: 1rem;
+        }
+
+        .spectrum-header .title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .spectrum-header h2 {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #2a2926;
+            letter-spacing: -0.01em;
+        }
+
+        .spectrum-header .subtitle {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: #6f6e69;
+            line-height: 1.4;
+        }
+
+        .spectrum-header .subtitle .highlight {
+            background: #f0ede6;
+            padding: 0.05rem 0.3rem;
+            border-radius: 3px;
+            color: #4a433a;
+        }
+
+        .spectrum-header .meta {
+            font-size: 0.55rem;
+            font-weight: 400;
+            color: #8f8e89;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            background: #f0efeb;
+            padding: 0.2rem 0.8rem;
+            border-radius: 100px;
+            border: 1px solid #e3e1db;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* main spectrum */
+        .spectrum {
+            position: relative;
+            padding: 2rem 0 1.5rem 0;
+        }
+
+        /* top axis: stakes */
+        .stakes-axis {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 0.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .stakes-axis .label {
+            font-size: 0.55rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #b3b1ab;
+        }
+
+        .stakes-axis .label.high {
+            color: #8f8e89;
+        }
+
+        .stakes-axis .line {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: #e3e1db;
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+
+        .stakes-axis .line .arrow-left,
+        .stakes-axis .line .arrow-right {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.5rem;
+            color: #d6d4ce;
+        }
+
+        .stakes-axis .line .arrow-left {
+            left: 0;
+        }
+        .stakes-axis .line .arrow-right {
+            right: 0;
+        }
+
+        /* trust spectrum steps */
+        .spectrum-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            gap: 0.5rem;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        /* connecting line behind steps */
+        .spectrum-steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 5%;
+            right: 5%;
+            height: 2px;
+            background: #e3e1db;
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+
+        .step {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+            z-index: 1;
+            min-width: 0;
+        }
+
+        .step .circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 400;
+            color: #ffffff;
+            background: #d6d4ce;
+            transition: all 0.2s ease;
+            border: 2px solid #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            flex-shrink: 0;
+        }
+
+        .step .circle .icon {
+            font-size: 1rem;
+        }
+
+        /* step colors - trust spectrum gradient */
+        .step:nth-child(1) .circle {
+            background: #e6e8e4;
+            color: #6f6e69;
+            border-color: #faf9f6;
+        }
+
+        .step:nth-child(2) .circle {
+            background: #dde0d8;
+            color: #5a5954;
+            border-color: #faf9f6;
+        }
+
+        .step:nth-child(3) .circle {
+            background: #c8ccc4;
+            color: #4a4945;
+            border-color: #faf9f6;
+        }
+
+        .step:nth-child(4) .circle {
+            background: #b8beb4;
+            color: #3d3c38;
+            border-color: #faf9f6;
+        }
+
+        .step:nth-child(5) .circle {
+            background: #a8aea4;
+            color: #2d2c29;
+            border-color: #faf9f6;
+        }
+
+        /* hover effect */
+        .step:hover .circle {
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        .step .step-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #2d2c29;
+            letter-spacing: 0.02em;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .step .step-desc {
+            font-size: 0.5rem;
+            font-weight: 400;
+            color: #9a9892;
+            text-align: center;
+            line-height: 1.4;
+            max-width: 80px;
+        }
+
+        .step .step-desc .em {
+            color: #6f6e69;
+            font-weight: 500;
+        }
+
+        /* bottom axis: intervention */
+        .intervention-axis {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.5rem 0.5rem 0.25rem 0.5rem;
+            margin-top: 0.5rem;
+            position: relative;
+            border-top: 1px solid #eeede8;
+        }
+
+        .intervention-axis .label {
+            font-size: 0.55rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #b3b1ab;
+        }
+
+        .intervention-axis .label.high {
+            color: #8f8e89;
+        }
+
+        .intervention-axis .line {
+            position: absolute;
+            top: 0;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: #e3e1db;
+        }
+
+        /* arrow indicators */
+        .spectrum-arrows {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 0.5rem;
+            margin-top: 0.25rem;
+            position: relative;
+        }
+
+        .spectrum-arrows .arrow-group {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.45rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #b3b1ab;
+        }
+
+        .spectrum-arrows .arrow-group .arrow-icon {
+            color: #cbc9c2;
+            font-size: 0.7rem;
+        }
+
+        /* insight box below */
+        .insight-box {
+            margin-top: 2.5rem;
+            padding: 1.25rem 1.5rem;
+            background: #f5f4f0;
+            border-radius: 16px;
+            border: 1px solid #e3e1db;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .insight-box .item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .insight-box .item .label {
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #8f8e89;
+        }
+
+        .insight-box .item .value {
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: #2d2c29;
+            line-height: 1.5;
+        }
+
+        .insight-box .item .value .em {
+            background: #f0ede6;
+            padding: 0.05rem 0.3rem;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        /* participant annotation */
+        .participant-annotation {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            padding-top: 1rem;
+            border-top: 1px solid #eeede8;
+        }
+
+        .participant-annotation .anno {
+            font-size: 0.5rem;
+            font-weight: 400;
+            color: #8f8e89;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .participant-annotation .anno .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .participant-annotation .anno .dot.d1 {
+            background: #d4c5b2;
+        }
+        .participant-annotation .anno .dot.d2 {
+            background: #b8c9c9;
+        }
+        .participant-annotation .anno .dot.d3 {
+            background: #c9c4b8;
+        }
+
+        /* responsive */
+        @media (max-width: 1024px) {
+            .spectrum-container {
+                padding: 2.5rem 2rem;
+            }
+            .insight-box {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+        }
+
+        @media (max-width: 820px) {
+            .spectrum-container {
+                padding: 2rem 1.25rem;
+                border-radius: 20px;
+            }
+            .spectrum-steps {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding: 0.5rem 0.25rem;
+                gap: 0.25rem;
+                justify-content: flex-start;
+            }
+            .step {
+                min-width: 80px;
+                flex-shrink: 0;
+            }
+            .step .circle {
+                width: 36px;
+                height: 36px;
+                font-size: 0.7rem;
+            }
+            .step .step-desc {
+                display: none;
+            }
+            .step .step-label {
+                font-size: 0.6rem;
+            }
+            .stakes-axis .label {
+                font-size: 0.45rem;
+            }
+            .intervention-axis .label {
+                font-size: 0.45rem;
+            }
+            .spectrum-arrows {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .spectrum-container {
+                padding: 1.5rem 1rem;
+                border-radius: 16px;
+            }
+            .step {
+                min-width: 60px;
+            }
+            .step .circle {
+                width: 32px;
+                height: 32px;
+                font-size: 0.6rem;
+            }
+            .step .step-label {
+                font-size: 0.5rem;
+            }
+            .insight-box {
+                padding: 1rem;
+            }
+            .participant-annotation {
+                gap: 0.75rem;
+            }
+        }
+
+        /* scrollbar for steps on small screens */
+        .spectrum-steps::-webkit-scrollbar {
+            height: 3px;
+        }
+
+        .spectrum-steps::-webkit-scrollbar-track {
+            background: #f0efec;
+            border-radius: 10px;
+        }
+
+        .spectrum-steps::-webkit-scrollbar-thumb {
+            background: #d6d4ce;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="spectrum-container">
+
+        <!-- header -->
+        <div class="spectrum-header">
+            <div class="title-group">
+                <h2>The trust spectrum</h2>
+                <div class="subtitle">
+                    AI interaction isn't binary - it's a <span class="highlight">spectrum of behaviours</span> 
+                    influenced by stakes and user control
+                </div>
+            </div>
+            <span class="meta">from diary study · n=47</span>
+        </div>
+
+        <!-- main spectrum -->
+        <div class="spectrum">
+
+            <!-- top: stakes axis -->
+            <div class="stakes-axis">
+                <span class="label">Low stakes</span>
+                <span class="label high">High stakes</span>
+                <div class="line">
+                    <span class="arrow-left">◀</span>
+                    <span class="arrow-right">▶</span>
+                </div>
+            </div>
+
+            <!-- trust steps -->
+            <div class="spectrum-steps">
+
+                <!-- Step 1: Accept -->
+                <div class="step">
+                    <div class="circle"><span class="icon">✓</span></div>
+                    <div class="step-label">Accept</div>
+                    <div class="step-desc">Take AI output <span class="em">at face value</span></div>
+                </div>
+
+                <!-- Step 2: Question -->
+                <div class="step">
+                    <div class="circle"><span class="icon">?</span></div>
+                    <div class="step-label">Question</div>
+                    <div class="step-desc"><span class="em">Challenge</span> or doubt the output</div>
+                </div>
+
+                <!-- Step 3: Verify -->
+                <div class="step">
+                    <div class="circle"><span class="icon">🔍</span></div>
+                    <div class="step-label">Verify</div>
+                    <div class="step-desc"><span class="em">Cross-check</span> with external sources</div>
+                </div>
+
+                <!-- Step 4: Modify -->
+                <div class="step">
+                    <div class="circle"><span class="icon">✎</span></div>
+                    <div class="step-label">Modify</div>
+                    <div class="step-desc"><span class="em">Adjust</span> or adapt the output</div>
+                </div>
+
+                <!-- Step 5: Reject -->
+                <div class="step">
+                    <div class="circle"><span class="icon">✕</span></div>
+                    <div class="step-label">Reject</div>
+                    <div class="step-desc">Refuse or <span class="em">discard</span> the output</div>
+                </div>
+
+            </div>
+
+            <!-- bottom: intervention axis -->
+            <div class="intervention-axis">
+                <span class="label">Low intervention</span>
+                <span class="label high">High intervention</span>
+                <div class="line"></div>
+            </div>
+
+            <!-- arrows -->
+            <div class="spectrum-arrows">
+                <div class="arrow-group">
+                    <span class="arrow-icon">◀</span> passive
+                </div>
+                <div class="arrow-group">
+                    active <span class="arrow-icon">▶</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- insight box -->
+        <div class="insight-box">
+            <div class="item">
+                <span class="label">Key insight 01</span>
+                <div class="value">
+                    Trust isn't binary - it's a <span class="em">spectrum</span> of behaviours 
+                    from acceptance to rejection
+                </div>
+            </div>
+            <div class="item">
+                <span class="label">Key insight 02</span>
+                <div class="value">
+                    Higher stakes shift users toward <span class="em">verification and rejection</span>, 
+                    demanding more control
+                </div>
+            </div>
+            <div class="item">
+                <span class="label">Key insight 03</span>
+                <div class="value">
+                    The goal isn't to push users to <span class="em">accept</span> - 
+                    it's to support them at <span class="em">every point</span> on the spectrum
+                </div>
+            </div>
+        </div>
+
+        <!-- participant annotation -->
+        <div class="participant-annotation">
+            <span class="anno">
+                <span class="dot d1"></span> AI Explorers: more likely to accept
+            </span>
+            <span class="anno">
+                <span class="dot d2"></span> AI Pragmatists: balanced across spectrum
+            </span>
+            <span class="anno">
+                <span class="dot d3"></span> AI Skeptics: more likely to question &amp; verify
+            </span>
+        </div>
+
+    </div>
+</body>
+</html>

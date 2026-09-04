@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Document Library - Screen Mockup</title>
+<style>
+  :root{
+    --ink:#0F1E3D;
+    --paper:#F7F5F0;
+    --line:#E4E0D6;
+    --blue:#1B3F91;
+    --blue-light:#EDF1FB;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#DAD6C9;
+    font-family:'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    color:var(--ink);
+    padding:40px;
+  }
+  .device{
+    max-width:1180px;margin:0 auto;background:#fff;border-radius:14px;
+    box-shadow:0 20px 60px rgba(15,30,61,.18);overflow:hidden;
+  }
+  .browser-bar{display:flex;align-items:center;gap:14px;padding:12px 18px;background:#EDEAE2;border-bottom:1px solid var(--line);}
+  .dots{display:flex;gap:6px;}
+  .dots span{width:10px;height:10px;border-radius:50%;background:#C9C4B4;}
+  .url-pill{flex:1;background:#fff;border-radius:6px;padding:5px 14px;font-size:11.5px;color:#8A8474;}
+
+  .screen{background:var(--paper);}
+  .app-header{display:flex;justify-content:space-between;align-items:center;padding:16px 32px;background:#fff;border-bottom:1px solid var(--line);}
+  .app-brand{font-size:14.5px;font-weight:700;}
+  .app-nav{display:flex;gap:26px;font-size:12.5px;color:#6B6656;align-items:center;}
+  .avatar{width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+
+  .content{padding:36px 40px 46px;background:#fff;}
+
+  .page-title{font-size:24px;font-weight:700;margin:0 0 4px;}
+  .page-sub{font-size:13.5px;color:#6B6656;margin:0 0 26px;}
+
+  .search-bar{
+    display:flex;align-items:center;gap:10px;
+    border:1px solid var(--line);border-radius:8px;
+    padding:13px 16px;margin-bottom:18px;background:var(--paper);
+  }
+  .search-bar .icon{color:#9C978A;font-size:14px;}
+  .search-bar input{
+    border:none;background:transparent;outline:none;flex:1;
+    font-size:13.5px;color:var(--ink);
+  }
+  .search-bar input::placeholder{color:#9C978A;}
+
+  .filter-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:34px;}
+  .filter-chip{
+    display:inline-flex;align-items:center;gap:6px;
+    border:1px solid var(--line);border-radius:20px;
+    padding:8px 14px;font-size:12px;color:#3F4A63;font-weight:600;
+  }
+  .filter-chip .chev{font-size:9px;color:#9C978A;}
+
+  h3.section{font-size:14px;margin:0 0 16px;}
+
+  .doc-row{
+    display:flex;align-items:center;justify-content:space-between;gap:20px;
+    padding:18px 4px;border-top:1px solid var(--line);
+  }
+  .doc-row:last-child{border-bottom:1px solid var(--line);}
+  .doc-left{display:flex;gap:14px;align-items:flex-start;}
+  .doc-icon{
+    width:38px;height:38px;border-radius:6px;flex:none;
+    background:var(--blue-light);color:var(--blue);
+    display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;
+  }
+  .doc-title{font-size:13.5px;font-weight:700;margin:0 0 4px;}
+  .doc-meta{font-size:11.5px;color:#8A8474;line-height:1.5;}
+  .doc-actions{display:flex;gap:10px;flex:none;}
+  .btn-primary{
+    background:var(--blue);color:#fff;border:none;border-radius:6px;
+    padding:9px 18px;font-size:12.5px;font-weight:600;cursor:pointer;
+  }
+  .btn-assist{
+    background:#fff;color:var(--blue);border:1px solid var(--line);border-radius:6px;
+    padding:9px 18px;font-size:12.5px;font-weight:600;cursor:pointer;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .btn-assist .spark{font-size:11px;}
+  .btn-assist.active{background:var(--blue-light);border-color:var(--blue);}
+  .btn-primary.opening{background:#3F4A63;}
+
+  .filter-chip{cursor:pointer;user-select:none;transition:background .12s,border-color .12s;}
+  .filter-chip.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+  .filter-chip.active .chev{color:#fff;}
+
+  .doc-row{flex-direction:column;align-items:stretch;}
+  .doc-row-top{display:flex;align-items:center;justify-content:space-between;gap:20px;}
+  .doc-row.hidden-row{display:none;}
+
+  .ai-summary{
+    display:none;margin:14px 0 2px 52px;background:var(--blue-light);
+    border-radius:8px;padding:14px 16px;font-size:12px;color:#28345C;line-height:1.6;max-width:640px;
+  }
+  .ai-summary.open{display:block;}
+  .ai-summary .lbl{font-size:10.5px;font-weight:700;letter-spacing:.04em;color:var(--blue);margin-bottom:6px;}
+
+  .principle-note{
+    margin-top:34px;background:var(--blue-light);border-radius:8px;
+    padding:18px 20px;font-size:12.5px;color:#28345C;line-height:1.6;
+  }
+  .principle-note b{color:var(--blue);}
+</style>
+</head>
+<body>
+<div class="device">
+  <div class="browser-bar">
+    <div class="dots"><span></span><span></span><span></span></div>
+    <div class="url-pill">app.investmentintelligence.com/documents</div>
+  </div>
+
+  <div class="screen">
+    <div class="app-header">
+      <div class="app-brand">Investment Intelligence</div>
+      <div class="app-nav">
+        <span>Search</span><span>Notifications</span><span>Help</span>
+        <span class="avatar">A</span>
+      </div>
+    </div>
+
+    <div class="content">
+      <p class="page-title">Documents</p>
+      <p class="page-sub">Find the information you need.</p>
+
+      <div class="search-bar">
+        <span class="icon">🔍</span>
+        <input type="text" id="docSearch" placeholder="Search documents, managers or funds..." />
+      </div>
+
+      <div class="filter-row">
+        <span class="filter-chip">Document type <span class="chev">▾</span></span>
+        <span class="filter-chip">Fund <span class="chev">▾</span></span>
+        <span class="filter-chip">Manager <span class="chev">▾</span></span>
+        <span class="filter-chip">Date <span class="chev">▾</span></span>
+        <span class="filter-chip">Topic <span class="chev">▾</span></span>
+      </div>
+
+      <h3 class="section">Recent documents</h3>
+
+      <div class="doc-row" data-title="global equity q2 investment review northstar asset management">
+        <div class="doc-row-top">
+          <div class="doc-left">
+            <div class="doc-icon">PDF</div>
+            <div>
+              <p class="doc-title">Global Equity - Q2 Investment Review</p>
+              <p class="doc-meta">Northstar Asset Management<br>PDF · 24 pages</p>
+            </div>
+          </div>
+          <div class="doc-actions">
+            <button class="btn-primary">Open</button>
+            <button class="btn-assist"><span class="spark">✦</span>Summarise</button>
+          </div>
+        </div>
+        <div class="ai-summary">
+          <p class="lbl">AI SUMMARY</p>
+          The fund outperformed its benchmark in Q2, led by technology and healthcare holdings, while exposure to large-cap technology increased and select defensive positions were trimmed.
+        </div>
+      </div>
+
+      <div class="doc-row" data-title="portfolio risk assessment investment strategy team">
+        <div class="doc-row-top">
+          <div class="doc-left">
+            <div class="doc-icon">PDF</div>
+            <div>
+              <p class="doc-title">Portfolio Risk Assessment</p>
+              <p class="doc-meta">Investment Strategy Team<br>PDF · 18 pages</p>
+            </div>
+          </div>
+          <div class="doc-actions">
+            <button class="btn-primary">Open</button>
+            <button class="btn-assist"><span class="spark">✦</span>Summarise</button>
+          </div>
+        </div>
+        <div class="ai-summary">
+          <p class="lbl">AI SUMMARY</p>
+          Overall portfolio risk remains within target range. Valuation sensitivity and macroeconomic uncertainty are flagged as the key considerations to monitor this quarter.
+        </div>
+      </div>
+
+      <div class="doc-row" data-title="manager commentary july northstar asset management">
+        <div class="doc-row-top">
+          <div class="doc-left">
+            <div class="doc-icon">PDF</div>
+            <div>
+              <p class="doc-title">Manager Commentary - July</p>
+              <p class="doc-meta">Northstar Asset Management<br>PDF · 12 pages</p>
+            </div>
+          </div>
+          <div class="doc-actions">
+            <button class="btn-primary">Open</button>
+            <button class="btn-assist"><span class="spark">✦</span>Summarise</button>
+          </div>
+        </div>
+        <div class="ai-summary">
+          <p class="lbl">AI SUMMARY</p>
+          The manager increased exposure to large-cap technology during July while maintaining a cautious stance on rate-sensitive sectors heading into the next quarter.
+        </div>
+      </div>
+
+      <p id="noResults" class="doc-meta" style="display:none;padding:18px 4px;">No documents match your search.</p>
+
+      <div class="principle-note">
+        <b>Design decision:</b> Open is the primary action; Summarise is an assistance action. AI assists the investment professional - it doesn't replace their judgement.
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Live search across doc rows
+  const searchInput = document.getElementById('docSearch');
+  const rows = Array.from(document.querySelectorAll('.doc-row'));
+  const noResults = document.getElementById('noResults');
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    let visible = 0;
+    rows.forEach(row => {
+      const match = row.dataset.title.includes(q);
+      row.classList.toggle('hidden-row', !match);
+      if (match) visible++;
+    });
+    noResults.style.display = visible === 0 ? 'block' : 'none';
+  });
+
+  // Filter chips - toggle active state
+  document.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', () => chip.classList.toggle('active'));
+  });
+
+  // Summarise - expand/collapse the AI summary panel
+  document.querySelectorAll('.btn-assist').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const row = btn.closest('.doc-row');
+      const summary = row.querySelector('.ai-summary');
+      const isOpen = summary.classList.toggle('open');
+      btn.classList.toggle('active', isOpen);
+      btn.innerHTML = isOpen
+        ? '<span class="spark">✦</span>Hide summary'
+        : '<span class="spark">✦</span>Summarise';
+    });
+  });
+
+  // Open - brief loading state to reinforce it as the primary action
+  document.querySelectorAll('.btn-primary').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const original = btn.textContent;
+      btn.textContent = 'Opening…';
+      btn.classList.add('opening');
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.classList.remove('opening');
+      }, 900);
+    });
+  });
+</script>
+</body>
+</html>

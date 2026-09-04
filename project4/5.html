@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diary Study - AI Trust Research</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f2f0eb;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .diary-study {
+            max-width: 1320px;
+            width: 100%;
+            background: #faf9f6;
+            border-radius: 28px;
+            border: 1px solid #e3e1db;
+            padding: 2.5rem 2.5rem 2rem 2.5rem;
+            box-shadow: 0 12px 48px -16px rgba(0, 0, 0, 0.05);
+        }
+
+        /* header */
+        .diary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.75rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-bottom: 1px solid #e8e6e0;
+            padding-bottom: 1rem;
+        }
+
+        .diary-header .title-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .diary-header h2 {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #2a2926;
+            letter-spacing: -0.01em;
+        }
+
+        .diary-header .subtitle {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: #6f6e69;
+            line-height: 1.4;
+        }
+
+        .diary-header .subtitle .highlight {
+            background: #f0ede6;
+            padding: 0.05rem 0.3rem;
+            border-radius: 3px;
+            color: #4a433a;
+        }
+
+        .diary-header .meta-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem 1.5rem;
+            align-items: center;
+        }
+
+        .diary-header .meta-item {
+            font-size: 0.55rem;
+            font-weight: 400;
+            color: #8f8e89;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .diary-header .meta-item .num {
+            font-weight: 500;
+            color: #4a4945;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+        }
+
+        .diary-header .meta-item .dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #d6d4ce;
+            display: inline-block;
+        }
+
+        /* filter bar */
+        .filter-bar {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            padding: 0.5rem 0 1rem 0;
+            border-bottom: 1px solid #e8e6e0;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-bar .filter-tag {
+            font-size: 0.5rem;
+            font-weight: 400;
+            color: #6f6e69;
+            background: #f5f4f0;
+            border: 1px solid #e3e1db;
+            padding: 0.15rem 0.6rem;
+            border-radius: 100px;
+            cursor: default;
+        }
+
+        .filter-bar .filter-tag.active {
+            background: #ffffff;
+            border-color: #cbc9c2;
+            color: #2a2926;
+            font-weight: 500;
+        }
+
+        .filter-bar .filter-tag .count {
+            color: #b3b1ab;
+            font-weight: 400;
+        }
+
+        /* diary grid */
+        .diary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        /* diary entry */
+        .diary-entry {
+            background: #ffffff;
+            border: 1px solid #e8e6e0;
+            border-radius: 16px;
+            padding: 1.25rem 1.25rem 1rem 1.25rem;
+            transition: all 0.1s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.01);
+        }
+
+        .diary-entry:hover {
+            border-color: #ceccc4;
+            box-shadow: 0 6px 16px -10px rgba(0, 0, 0, 0.04);
+        }
+
+        .diary-entry .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .diary-entry .participant-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .diary-entry .participant-badge {
+            font-size: 0.55rem;
+            font-weight: 600;
+            color: #2a2926;
+            background: #f0efeb;
+            padding: 0.15rem 0.6rem;
+            border-radius: 100px;
+            border: 1px solid #e3e1db;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .diary-entry .participant-type {
+            font-size: 0.5rem;
+            font-weight: 400;
+            color: #8f8e89;
+            background: #f5f4f0;
+            padding: 0.1rem 0.5rem;
+            border-radius: 100px;
+            border: 1px solid #e8e6e0;
+        }
+
+        .diary-entry .entry-day {
+            font-size: 0.5rem;
+            font-weight: 400;
+            color: #b3b1ab;
+            font-family: 'JetBrains Mono', monospace;
+            background: #f5f4f0;
+            padding: 0.1rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #e8e6e0;
+        }
+
+        /* diary content */
+        .diary-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .diary-row {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 0.5rem;
+            align-items: baseline;
+            padding: 0.2rem 0;
+            border-bottom: 1px solid #f3f2ee;
+        }
+
+        .diary-row:last-child {
+            border-bottom: none;
+        }
+
+        .diary-row .label {
+            font-size: 0.5rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #8f8e89;
+        }
+
+        .diary-row .value {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: #2d2c29;
+            line-height: 1.4;
+        }
+
+        .diary-row .value .highlight {
+            background: #faf0d7;
+            padding: 0.05rem 0.2rem;
+            border-radius: 2px;
+            font-weight: 500;
+        }
+
+        .diary-row .value .highlight-blue {
+            background: #e6edf5;
+            padding: 0.05rem 0.2rem;
+            border-radius: 2px;
+            font-weight: 500;
+            color: #2d3d4a;
+        }
+
+        .diary-row .value .highlight-green {
+            background: #e6f0ea;
+            padding: 0.05rem 0.2rem;
+            border-radius: 2px;
+            font-weight: 500;
+            color: #2d4a3d;
+        }
+
+        .diary-row .value .emoji {
+            font-size: 0.8rem;
+            margin-right: 0.2rem;
+        }
+
+        /* behaviour tags */
+        .behaviour-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            margin-top: 0.3rem;
+        }
+
+        .behaviour-tags .btag {
+            font-size: 0.45rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #6f6e69;
+            background: #f5f4f0;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            border: 1px solid #e8e6e0;
+        }
+
+        .behaviour-tags .btag.trust {
+            background: #e6f0ea;
+            border-color: #c8d8d0;
+            color: #2d4a3d;
+        }
+
+        .behaviour-tags .btag.question {
+            background: #faf0d7;
+            border-color: #e0d4be;
+            color: #4a3d2a;
+        }
+
+        .behaviour-tags .btag.verify {
+            background: #e6edf5;
+            border-color: #c8d0d8;
+            color: #2d3d4a;
+        }
+
+        .behaviour-tags .btag.reject {
+            background: #f5ecec;
+            border-color: #e0d0d0;
+            color: #4a2d2d;
+        }
+
+        /* researcher note (small annotation) */
+        .researcher-note {
+            font-size: 0.5rem;
+            font-weight: 400;
+            color: #8f8e89;
+            background: #f8f7f4;
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            border-left: 2px solid #cbc9c2;
+            margin-top: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .researcher-note .em {
+            font-weight: 500;
+            color: #5a5954;
+        }
+
+        /* footer */
+        .diary-footer {
+            margin-top: 2rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid #e8e6e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .diary-footer .stats {
+            font-size: 0.6rem;
+            color: #9a9892;
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .diary-footer .stats span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .diary-footer .stats .num {
+            font-weight: 500;
+            color: #5a5954;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .diary-footer .tag-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .diary-footer .tag-group .ftag {
+            font-size: 0.5rem;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #8f8e89;
+            background: #f0efeb;
+            padding: 0.15rem 0.6rem;
+            border-radius: 100px;
+            border: 1px solid #e3e1db;
+        }
+
+        /* responsive */
+        @media (max-width: 1024px) {
+            .diary-study {
+                padding: 2rem 1.5rem 1.5rem 1.5rem;
+            }
+            .diary-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .diary-row {
+                grid-template-columns: 70px 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .diary-study {
+                padding: 1.5rem 1rem 1.25rem 1rem;
+                border-radius: 20px;
+            }
+            .diary-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .diary-row {
+                grid-template-columns: 1fr;
+                gap: 0.15rem;
+                padding: 0.4rem 0;
+            }
+            .diary-row .label {
+                font-size: 0.45rem;
+            }
+            .diary-entry {
+                padding: 1rem;
+            }
+            .filter-bar {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding-bottom: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="diary-study">
+
+        <!-- header -->
+        <div class="diary-header">
+            <div class="title-group">
+                <h2>Diary study - AI interactions</h2>
+                <div class="subtitle">
+                    Participants documented <span class="highlight">real-world AI interactions</span> 
+                    over 5–7 days, capturing context, reactions, and decisions
+                </div>
+            </div>
+            <div class="meta-group">
+                <span class="meta-item"><span class="num">12</span> participants</span>
+                <span class="meta-item"><span class="num">47</span> entries</span>
+                <span class="meta-item"><span class="num">5</span> days avg</span>
+                <span class="meta-item"><span class="num">6</span> AI tools used</span>
+            </div>
+        </div>
+
+        <!-- filter bar -->
+        <div class="filter-bar">
+            <span class="filter-tag active">All entries <span class="count">(47)</span></span>
+            <span class="filter-tag">AI Explorers <span class="count">(18)</span></span>
+            <span class="filter-tag">AI Pragmatists <span class="count">(16)</span></span>
+            <span class="filter-tag">AI Skeptics <span class="count">(13)</span></span>
+            <span class="filter-tag" style="margin-left:auto;">Day 1–5 · 2026</span>
+        </div>
+
+        <!-- diary grid -->
+        <div class="diary-grid">
+
+            <!-- Entry 1 -->
+            <div class="diary-entry">
+                <div class="entry-header">
+                    <div class="participant-info">
+                        <span class="participant-badge">P04</span>
+                        <span class="participant-type">AI Explorer</span>
+                    </div>
+                    <span class="entry-day">Day 2 · 14:32</span>
+                </div>
+                <div class="diary-content">
+                    <div class="diary-row">
+                        <span class="label">Context</span>
+                        <span class="value">Researching a <span class="highlight-blue">product recommendation</span> for a new laptop</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">AI output</span>
+                        <span class="value"><span class="highlight">“The best laptop for you is Model X”</span> - with confidence score</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">Reaction</span>
+                        <span class="value"><span class="emoji">🤔</span> <span class="highlight-blue">Uncertain</span> - wanted to know why Model X over Model Y</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">Behaviour</span>
+                        <span class="value"><span class="emoji">🔍</span> Opened <span class="highlight">3 external sources</span> (reviews, benchmarks, forums)</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">Decision</span>
+                        <span class="value"><span class="highlight-green">Used AI for discovery</span> - but made final decision based on external verification</span>
+                    </div>
+                    <div class="behaviour-tags">
+                        <span class="btag trust">trust: discovery</span>
+                        <span class="btag verify">verify: decision</span>
+                        <span class="btag question">question: recommendation</span>
+                    </div>
+                    <div class="researcher-note">
+                        <span class="em">↳ Insight:</span> AI trusted for initial research, but verification needed before action
+                    </div>
+                </div>
+            </div>
+
+            <!-- Entry 2 -->
+            <div class="diary-entry">
+                <div class="entry-header">
+                    <div class="participant-info">
+                        <span class="participant-badge">P07</span>
+                        <span class="participant-type">AI Skeptic</span>
+                    </div>
+                    <span class="entry-day">Day 3 · 09:15</span>
+                </div>
+                <div class="diary-content">
+                    <div class="diary-row">
+                        <span class="label">Context</span>
+                        <span class="value">Summarising a <span class="highlight-blue">complex research paper</span> for a project</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">AI output</span>
+                        <span class="value">Clean, <span class="highlight">polished summary</span> with key findings and methodology</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">Reaction</span>
+                        <span class="value"><span class="emoji">😐</span> <span class="highlight-blue">Suspicious</span> - too polished, felt like it might miss nuance</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">Behaviour</span>
+                        <span class="value"><span class="emoji">📄</span> <span class="highlight">Read the original paper</span> to verify key claims</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">Decision</span>
+                        <span class="value"><span class="highlight-green">Used AI as a starting point</span> - but relied on own reading for synthesis</span>
+                    </div>
+                    <div class="behaviour-tags">
+                        <span class="btag trust">trust: structure</span>
+                        <span class="btag verify">verify: claims</span>
+                        <span class="btag reject">reject: full reliance</span>
+                    </div>
+                    <div class="researcher-note">
+                        <span class="em">↳ Insight:</span> Polished, confident responses can trigger skepticism, especially from AI Skeptics
+                    </div>
+                </div>
+            </div>
+
+            <!-- Entry 3 -->
+            <div class="diary-entry">
+                <div class="entry-header">
+                    <div class="participant-info">
+                        <span class="participant-badge">P02</span>
+                        <span class="participant-type">AI Explorer</span>
+                    </div>
+                    <span class="entry-day">Day 1 · 20:45</span>
+                </div>
+                <div class="diary-content">
+                    <div class="diary-row">
+                        <span class="label">Context</span>
+                        <span class="value">Planning a <span class="highlight-blue">trip itinerary</span> and asking for recommendations</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">AI output</span>
+                        <span class="value"><span class="highlight">“Here’s your perfect 5-day itinerary”</span> - with specific suggestions</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">Reaction</span>
+                        <span class="value"><span class="emoji">😊</span> <span class="highlight-blue">Comfortable</span> - low-stakes, easy to verify or ignore</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">Behaviour</span>
+                        <span class="value"><span class="emoji">✅</span> <span class="highlight">Quickly scanned</span> - no external verification needed</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">Decision</span>
+                        <span class="value"><span class="highlight-green">Accepted and adjusted</span> - used as a flexible starting point</span>
+                    </div>
+                    <div class="behaviour-tags">
+                        <span class="btag trust">trust: low-stakes</span>
+                        <span class="btag trust">trust: starting point</span>
+                    </div>
+                    <div class="researcher-note">
+                        <span class="em">↳ Insight:</span> Trust in low-stakes situations is much higher - users are more willing to accept and adjust
+                    </div>
+                </div>
+            </div>
+
+            <!-- Entry 4 -->
+            <div class="diary-entry">
+                <div class="entry-header">
+                    <div class="participant-info">
+                        <span class="participant-badge">P09</span>
+                        <span class="participant-type">AI Pragmatist</span>
+                    </div>
+                    <span class="entry-day">Day 4 · 16:20</span>
+                </div>
+                <div class="diary-content">
+                    <div class="diary-row">
+                        <span class="label">Context</span>
+                        <span class="value">Reviewing <span class="highlight-blue">financial options</span> - investment recommendation</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">AI output</span>
+                        <span class="value"><span class="highlight">“Recommended: Fund A”</span> - with brief explanation</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">Reaction</span>
+                        <span class="value"><span class="emoji">😰</span> <span class="highlight-blue">High uncertainty</span> - felt this was a high-stakes decision</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">Behaviour</span>
+                        <span class="value"><span class="emoji">📊</span> <span class="highlight">Sourced 5+ external sources</span> - performance data, analyst reports, forums</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">Decision</span>
+                        <span class="value"><span class="highlight-green">Used AI for comparison</span> - but made final decision independently</span>
+                    </div>
+                    <div class="behaviour-tags">
+                        <span class="btag verify">verify: extensively</span>
+                        <span class="btag question">question: high-stakes</span>
+                        <span class="btag reject">reject: sole reliance</span>
+                    </div>
+                    <div class="researcher-note">
+                        <span class="em">↳ Insight:</span> High-stakes situations trigger extensive verification - AI is a comparison tool, not a decision-maker
+                    </div>
+                </div>
+            </div>
+
+            <!-- Entry 5 -->
+            <div class="diary-entry">
+                <div class="entry-header">
+                    <div class="participant-info">
+                        <span class="participant-badge">P11</span>
+                        <span class="participant-type">AI Skeptic</span>
+                    </div>
+                    <span class="entry-day">Day 5 · 11:05</span>
+                </div>
+                <div class="diary-content">
+                    <div class="diary-row">
+                        <span class="label">Context</span>
+                        <span class="value">Writing a <span class="highlight-blue">professional email</span> - used AI to draft it</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">AI output</span>
+                        <span class="value">Generated a <span class="highlight">polished, professional draft</span></span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">Reaction</span>
+                        <span class="value"><span class="emoji">🤨</span> <span class="highlight-blue">Skeptical</span> - felt it didn’t sound like their voice</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">Behaviour</span>
+                        <span class="value"><span class="emoji">✏️</span> <span class="highlight">Heavily edited</span> - rewrote 70% of the draft</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">Decision</span>
+                        <span class="value"><span class="highlight-green">Used AI as a template</span> - but final version was mostly their own work</span>
+                    </div>
+                    <div class="behaviour-tags">
+                        <span class="btag trust">trust: template</span>
+                        <span class="btag reject">reject: as-is</span>
+                        <span class="btag question">question: authenticity</span>
+                    </div>
+                    <div class="researcher-note">
+                        <span class="em">↳ Insight:</span> AI-generated content often needs significant editing to match the user’s voice and intent
+                    </div>
+                </div>
+            </div>
+
+            <!-- Entry 6 -->
+            <div class="diary-entry">
+                <div class="entry-header">
+                    <div class="participant-info">
+                        <span class="participant-badge">P06</span>
+                        <span class="participant-type">AI Pragmatist</span>
+                    </div>
+                    <span class="entry-day">Day 3 · 13:45</span>
+                </div>
+                <div class="diary-content">
+                    <div class="diary-row">
+                        <span class="label">Context</span>
+                        <span class="value">Organising <span class="highlight-blue">project tasks</span> - asked AI to prioritise and structure</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">AI output</span>
+                        <span class="value">Structured task list with <span class="highlight">priorities and dependencies</span></span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">Reaction</span>
+                        <span class="value"><span class="emoji">👍</span> <span class="highlight-blue">Confident</span> - felt the structure was logical and useful</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">Behaviour</span>
+                        <span class="value"><span class="emoji">🔄</span> <span class="highlight">Quickly reviewed and accepted</span> - minor adjustments only</span>
+                    </div>
+                    <div class="diary-row">
+                        <span class="label">Decision</span>
+                        <span class="value"><span class="highlight-green">Accepted with minimal changes</span> - used as working plan</span>
+                    </div>
+                    <div class="behaviour-tags">
+                        <span class="btag trust">trust: organisation</span>
+                        <span class="btag trust">trust: structure</span>
+                    </div>
+                    <div class="researcher-note">
+                        <span class="em">↳ Insight:</span> Users are more likely to trust AI for organisation and structuring than for subjective or high-stakes decisions
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- footer -->
+        <div class="diary-footer">
+            <div class="stats">
+                <span><span class="num">47</span> total entries</span>
+                <span><span class="num">12</span> participants</span>
+                <span><span class="num">18</span> trust events</span>
+                <span><span class="num">22</span> verification events</span>
+                <span><span class="num">7</span> rejection events</span>
+            </div>
+            <div class="tag-group">
+                <span class="ftag">diary study · 5 days</span>
+                <span class="ftag">behavioural research</span>
+                <span class="ftag">v2 · 2026</span>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI-Generated Note - Screen Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16302C;
+    --paper:#F3F7F6;
+    --line:#DDE7E3;
+    --teal:#0E7C6E;
+    --teal-dark:#0A5A50;
+    --teal-light:#E4F3F0;
+    --amber:#C97A2B;
+    --amber-light:#FBEEDF;
+    --red:#C1442E;
+    --green:#1E8A5F;
+    --green-light:#E4F3EB;
+    --ink-soft:#5B6D68;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;background:#DDD8CB;
+    font-family:'Inter','Segoe UI',Arial,sans-serif;
+    color:var(--ink);padding:40px;
+  }
+  .device{
+    max-width:1440px;margin:0 auto;background:#fff;border-radius:14px;
+    box-shadow:0 20px 60px rgba(15,40,35,.18);overflow:hidden;
+  }
+  .browser-bar{display:flex;align-items:center;gap:14px;padding:12px 18px;background:#EAE6DB;border-bottom:1px solid var(--line);}
+  .dots{display:flex;gap:6px;}
+  .dots span{width:10px;height:10px;border-radius:50%;background:#CFC9B8;}
+  .url-pill{flex:1;background:#fff;border-radius:6px;padding:5px 14px;font-size:11.5px;color:var(--ink-soft);}
+
+  .app{background:var(--paper);min-height:1024px;}
+
+  .top-bar{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:16px 32px;background:#fff;border-bottom:1px solid var(--line);
+  }
+  .top-left .name{font-size:15.5px;font-weight:700;margin:0 0 2px;}
+  .top-left .status{font-size:12px;color:var(--ink-soft);}
+  .top-right{display:flex;gap:10px;}
+  .btn-discard{
+    background:#fff;border:1px solid var(--line);color:var(--ink-soft);border-radius:8px;
+    padding:9px 18px;font-size:12.5px;font-weight:600;cursor:pointer;
+  }
+  .btn-add{
+    background:var(--teal);color:#fff;border:none;border-radius:8px;
+    padding:9px 20px;font-size:12.5px;font-weight:700;cursor:pointer;
+  }
+
+  .split{display:grid;grid-template-columns:1fr 340px;}
+  .note-area{padding:30px 40px 50px;}
+
+  .note-head{margin-bottom:16px;}
+  .note-title{font-size:21px;font-weight:700;margin:0 0 4px;}
+  .note-sub{font-size:12.5px;color:var(--ink-soft);}
+  .note-time{font-size:11.5px;color:var(--ink-soft);margin-top:4px;}
+
+  .banner{
+    display:flex;align-items:center;gap:10px;
+    background:var(--amber-light);color:#8A5620;border-radius:8px;
+    padding:12px 16px;font-size:12.5px;font-weight:600;margin:18px 0 30px;
+  }
+  .banner .ic{font-size:14px;}
+
+  .note-section{margin-bottom:30px;}
+  .note-section h4{
+    font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--teal-dark);
+    text-transform:uppercase;margin:0 0 14px;padding-bottom:10px;border-bottom:1px solid var(--line);
+  }
+  .sub-label{font-size:11px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.03em;margin:0 0 10px;}
+  .field-block{margin-bottom:16px;}
+  .field-name{font-size:13px;font-weight:700;margin:0 0 4px;}
+  .field-text{font-size:13px;color:var(--ink);line-height:1.6;}
+
+  .ai-panel{background:#fff;border-left:1px solid var(--line);padding:28px 24px;}
+  .ai-panel h3{font-size:13px;margin:0 0 4px;}
+  .ai-panel .sub{font-size:11px;color:var(--ink-soft);margin:0 0 22px;line-height:1.5;}
+
+  .ev-card{border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:14px;}
+  .ev-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+  .ev-name{font-size:13px;font-weight:700;}
+  .ev-status{
+    display:inline-flex;align-items:center;gap:5px;
+    background:var(--green-light);color:var(--green);
+    font-size:10.5px;font-weight:700;padding:3px 10px;border-radius:10px;
+  }
+  .ev-source-label{font-size:10px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.03em;margin:0 0 5px;}
+  .ev-source{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:12px;color:var(--teal-dark);font-weight:600;
+    background:var(--teal-light);border-radius:6px;padding:6px 10px;
+    cursor:pointer;border:none;
+  }
+  .ev-quote{
+    display:none;margin-top:10px;font-size:11.5px;color:var(--ink-soft);
+    line-height:1.55;border-left:2px solid var(--teal-light);padding-left:10px;
+  }
+  .ev-quote.open{display:block;}
+
+  .field-block{position:relative;padding-right:56px;}
+  .field-block.removed{opacity:.4;}
+  .field-block.removed .field-text{text-decoration:line-through;}
+  .field-actions{position:absolute;top:0;right:0;display:flex;gap:6px;}
+  .field-icon-btn{
+    width:24px;height:24px;border-radius:6px;border:1px solid var(--line);background:#fff;
+    color:var(--ink-soft);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  }
+  .field-icon-btn:hover{border-color:var(--teal);color:var(--teal-dark);}
+  .field-icon-btn.active{background:var(--teal-light);border-color:var(--teal);color:var(--teal-dark);}
+  .field-text[contenteditable="true"]{
+    outline:1px dashed var(--teal);border-radius:4px;padding:4px 6px;margin:-4px -6px;
+  }
+
+  .btn-discard:disabled,.btn-add:disabled{opacity:.5;cursor:default;}
+  .saved-banner{
+    display:none;align-items:center;gap:10px;background:var(--green-light);color:var(--green);
+    border-radius:8px;padding:12px 16px;font-size:12.5px;font-weight:600;margin:18px 0 30px;
+  }
+  .saved-banner.active{display:flex;}
+  .banner.hidden{display:none;}
+  .note-area.discarded .note-section,.note-area.discarded .banner,.note-area.discarded .saved-banner{display:none;}
+  .discard-msg{display:none;font-size:13px;color:var(--ink-soft);padding:30px 0;}
+  .discard-msg.active{display:block;}
+</style>
+</head>
+<body>
+<div class="device">
+  <div class="browser-bar">
+    <div class="dots"><span></span><span></span><span></span></div>
+    <div class="url-pill">alpha.clinicalworkspace.app/patients/sarah-mitchell/note-draft</div>
+  </div>
+
+  <div class="app">
+    <div class="top-bar">
+      <div class="top-left">
+        <p class="name">Sarah Mitchell</p>
+        <p class="status">Draft ready for review</p>
+      </div>
+      <div class="top-right">
+        <button class="btn-discard" id="discardBtn">Discard draft</button>
+        <button class="btn-add" id="addBtn">Add to patient record</button>
+      </div>
+    </div>
+
+    <div class="split">
+      <div class="note-area" id="noteArea">
+        <div class="note-head">
+          <p class="note-title">Draft clinical note</p>
+          <p class="note-sub">Generated from today's consultation</p>
+          <p class="note-time">08 Sep 2026 · 10:02 AM</p>
+        </div>
+
+        <div class="banner" id="reviewBanner"><span class="ic">⚠</span>AI-generated draft. Review before adding to the patient record.</div>
+        <div class="saved-banner" id="savedBanner"><span class="ic">✓</span>Added to patient record · just now</div>
+        <p class="discard-msg" id="discardMsg">Draft discarded. Nothing was added to the patient record.</p>
+
+        <div class="note-section">
+          <h4>Subjective</h4>
+          <p class="sub-label">Patient-reported symptoms</p>
+          <div class="field-block">
+            <p class="field-name">Headaches</p>
+            <p class="field-text" data-original="Frequency has reduced to approximately 1–2 episodes per week.">Frequency has reduced to approximately 1–2 episodes per week.</p>
+            <div class="field-actions">
+              <button class="field-icon-btn edit-btn" title="Edit">✎</button>
+              <button class="field-icon-btn remove-btn" title="Remove">✕</button>
+            </div>
+          </div>
+          <div class="field-block">
+            <p class="field-name">Fatigue</p>
+            <p class="field-text" data-original="Patient continues to report persistent fatigue.">Patient continues to report persistent fatigue.</p>
+            <div class="field-actions">
+              <button class="field-icon-btn edit-btn" title="Edit">✎</button>
+              <button class="field-icon-btn remove-btn" title="Remove">✕</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="note-section">
+          <h4>History</h4>
+          <div class="field-block">
+            <p class="field-name">Since previous consultation</p>
+            <p class="field-text" data-original="Patient reports a reduction in headache frequency.">Patient reports a reduction in headache frequency.</p>
+            <div class="field-actions">
+              <button class="field-icon-btn edit-btn" title="Edit">✎</button>
+              <button class="field-icon-btn remove-btn" title="Remove">✕</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="note-section">
+          <h4>Current medication</h4>
+          <div class="field-block">
+            <p class="field-name">Medication A</p>
+            <p class="field-text" data-original="Continue current dosage.">Continue current dosage.</p>
+            <div class="field-actions">
+              <button class="field-icon-btn edit-btn" title="Edit">✎</button>
+              <button class="field-icon-btn remove-btn" title="Remove">✕</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai-panel">
+        <h3>AI confidence &amp; sources</h3>
+        <p class="sub">Every item links back to where it came from in the conversation, rather than a confidence score.</p>
+
+        <div class="ev-card">
+          <div class="ev-head">
+            <span class="ev-name">Headaches</span>
+            <span class="ev-status">✓ Supported</span>
+          </div>
+          <p class="ev-source-label">Source</p>
+          <button class="ev-source" data-target="quote1">❝ Patient statement · 04:18</button>
+          <p class="ev-quote" id="quote1">"They've been happening less often. Maybe once or twice a week now."</p>
+        </div>
+
+        <div class="ev-card">
+          <div class="ev-head">
+            <span class="ev-name">Fatigue</span>
+            <span class="ev-status">✓ Supported</span>
+          </div>
+          <p class="ev-source-label">Source</p>
+          <button class="ev-source" data-target="quote2">❝ Patient statement · 06:42</button>
+          <p class="ev-quote" id="quote2">"...but I've still been feeling quite tired."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const addBtn = document.getElementById('addBtn');
+  const discardBtn = document.getElementById('discardBtn');
+  const reviewBanner = document.getElementById('reviewBanner');
+  const savedBanner = document.getElementById('savedBanner');
+  const discardMsg = document.getElementById('discardMsg');
+  const noteArea = document.getElementById('noteArea');
+
+  addBtn.addEventListener('click', () => {
+    reviewBanner.classList.add('hidden');
+    savedBanner.classList.add('active');
+    addBtn.disabled = true;
+    discardBtn.disabled = true;
+  });
+
+  discardBtn.addEventListener('click', () => {
+    if (!confirm('Discard this draft? Nothing will be added to the patient record.')) return;
+    noteArea.classList.add('discarded');
+    discardMsg.classList.add('active');
+    addBtn.disabled = true;
+    discardBtn.disabled = true;
+  });
+
+  // Edit a field in place
+  document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const text = btn.closest('.field-block').querySelector('.field-text');
+      const editing = text.getAttribute('contenteditable') === 'true';
+      if (editing) {
+        text.setAttribute('contenteditable', 'false');
+        btn.classList.remove('active');
+      } else {
+        text.setAttribute('contenteditable', 'true');
+        text.focus();
+        btn.classList.add('active');
+      }
+    });
+  });
+
+  // Remove / restore a field
+  document.querySelectorAll('.remove-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const block = btn.closest('.field-block');
+      const removed = block.classList.toggle('removed');
+      btn.textContent = removed ? '↺' : '✕';
+      btn.title = removed ? 'Restore' : 'Remove';
+    });
+  });
+
+  // Expand/collapse source quotes
+  document.querySelectorAll('.ev-source').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById(btn.dataset.target).classList.toggle('open');
+    });
+  });
+</script>
+</body>
+</html>

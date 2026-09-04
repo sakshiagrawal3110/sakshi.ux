@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Platform Dashboard - Interactive Mockup</title>
+<style>
+  :root{
+    --ink:#0F1E3D;
+    --paper:#F7F5F0;
+    --line:#E4E0D6;
+    --blue:#1B3F91;
+    --blue-light:#EDF1FB;
+    --green:#1E7A46;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#DAD6C9;
+    font-family:'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    color:var(--ink);
+    padding:40px;
+  }
+  .device{
+    max-width:1180px;
+    margin:0 auto;
+    background:#fff;
+    border-radius:14px;
+    box-shadow:0 20px 60px rgba(15,30,61,.18);
+    overflow:hidden;
+  }
+  .browser-bar{
+    display:flex;align-items:center;gap:14px;
+    padding:12px 18px;background:#EDEAE2;border-bottom:1px solid var(--line);
+  }
+  .dots{display:flex;gap:6px;}
+  .dots span{width:10px;height:10px;border-radius:50%;background:#C9C4B4;}
+  .url-pill{
+    flex:1;background:#fff;border-radius:6px;padding:5px 14px;
+    font-size:11.5px;color:#8A8474;
+  }
+
+  .screen{background:var(--paper);}
+
+  /* App header */
+  .app-header{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:16px 32px;background:#fff;border-bottom:1px solid var(--line);
+  }
+  .app-brand{font-size:14.5px;font-weight:700;}
+  .app-nav{display:flex;gap:26px;font-size:12.5px;color:#6B6656;align-items:center;}
+  .app-nav span { cursor: pointer; transition: color 0.2s; }
+  .app-nav span:hover { color: var(--blue); }
+  .avatar{width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+
+  .body-grid{display:grid;grid-template-columns:1fr 300px;background:#fff;}
+  .main{padding:28px 32px;border-right:1px solid var(--line);}
+  .side{padding:28px 26px;}
+
+  .welcome-title{font-size:20px;font-weight:700;margin:0 0 4px;}
+  .welcome-sub{font-size:13px;color:#6B6656;margin:0 0 26px;}
+
+  .metric-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:34px;}
+  .metric-card{border:1px solid var(--line);border-radius:6px;padding:16px;transition: transform 0.2s, box-shadow 0.2s;cursor:default;}
+  .metric-card:hover{transform: translateY(-2px); box-shadow:0 4px 12px rgba(0,0,0,0.05);}
+  .metric-card .lbl{font-size:11px;color:#8A8474;margin-bottom:6px;}
+  .metric-card .val{font-size:20px;font-weight:700;color:var(--blue);transition: all 0.3s;}
+
+  h3.section{font-size:13.5px;margin:0 0 14px;}
+  .chart-block{border:1px solid var(--line);border-radius:6px;padding:20px 22px;margin-bottom:30px;}
+  .chart-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+  .toggle-group{display:flex;gap:4px;}
+  .toggle{font-size:11px;font-weight:600;padding:5px 11px;border-radius:14px;background:var(--paper);color:#6B6656;cursor:pointer;user-select:none;transition: all 0.2s;}
+  .toggle:hover{background:#E0DDD3;}
+  .toggle.active{background:var(--blue);color:#fff;}
+
+  /* Dynamic SVG Animations */
+  polyline, polygon { transition: all 0.5s ease-in-out; }
+
+  .alloc-bar{display:flex;height:24px;border-radius:4px;overflow:hidden;margin:10px 0 12px;}
+  .alloc-bar span{display:block;height:100%;transition: width 0.4s ease;}
+  .alloc-legend{display:flex;gap:18px;font-size:11.5px;color:#3F4A63;flex-wrap:wrap;}
+  .alloc-legend i{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:5px;}
+
+  .side h4{font-size:12.5px;margin:0 0 16px;color:#6B6656;}
+  .activity-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #F0EDE4;font-size:12.5px;color:#3F4A63;transition: background 0.2s;cursor:pointer;padding-left:4px;padding-right:4px;}
+  .activity-item:hover{background:var(--paper);border-radius:4px;}
+  .activity-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);margin-top:6px;flex:none;}
+  .activity-item:last-child{border-bottom:none;}
+
+  .note{margin-top:18px;background:var(--blue-light);border-radius:6px;padding:14px 16px;font-size:11.5px;color:#28345C;line-height:1.5;}
+  .note b{color:var(--blue);}
+
+  /* In-screen sections below the fold */
+  .screen-section{padding:36px 32px;border-top:8px solid var(--paper);}
+  .screen-section h2{font-size:17px;font-weight:700;margin:0 0 6px;}
+  .screen-section .section-note{font-size:12.5px;color:#6B6656;margin:0 0 20px;max-width:640px;line-height:1.5;}
+
+  .manager-filter{display:flex;gap:8px;margin-bottom:16px;}
+  .filter-btn{font-size:11.5px;padding:4px 10px;border-radius:4px;border:1px solid var(--line);background:#fff;cursor:pointer;color:#6B6656;transition:all 0.2s;}
+  .filter-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+
+  .manager-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .manager-card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:20px;transition: transform 0.2s, box-shadow 0.2s;}
+  .manager-card:hover{transform: translateY(-2px); box-shadow:0 6px 16px rgba(0,0,0,0.06);}
+  .manager-card .m-name{font-size:14.5px;font-weight:700;margin:0 0 4px;}
+  .manager-card .m-strategy{font-size:11.5px;color:#8A8474;margin:0 0 16px;}
+  .manager-card .m-row{display:flex;justify-content:space-between;font-size:12px;color:#6B6656;padding:7px 0;border-top:1px solid #F0EDE4;}
+  .manager-card .m-row b{color:var(--ink);font-size:13px;}
+  .manager-card .m-return{color:var(--green);}
+  .manager-card .m-link{display:block;margin-top:14px;font-size:12.5px;font-weight:600;color:var(--blue);cursor:pointer;transition: opacity 0.2s;}
+  .manager-card .m-link:hover{opacity:0.7;}
+
+  .insight-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .insight-card{background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden;cursor:pointer;transition: transform 0.2s, box-shadow 0.2s;}
+  .insight-card:hover{transform: translateY(-2px); box-shadow:0 6px 16px rgba(0,0,0,0.06);}
+  .insight-thumb{height:100px;background:linear-gradient(160deg,#1B3F91,#5089BE);}
+  .insight-thumb.alt{background:linear-gradient(160deg,#C1522A,#E8925A);}
+  .insight-thumb.alt2{background:linear-gradient(160deg,#1E7A46,#5AAE7E);}
+  .insight-body{padding:16px 18px 18px;}
+  .insight-tag{font-size:10.5px;font-weight:700;letter-spacing:.04em;color:var(--blue);margin:0 0 8px;}
+  .insight-title{font-size:14px;font-weight:700;margin:0 0 8px;line-height:1.35;}
+  .insight-meta{font-size:11px;color:#8A8474;}
+
+  .faq-item{border-top:1px solid var(--line);}
+  .faq-item:last-child{border-bottom:1px solid var(--line);}
+  .faq-item summary{
+    list-style:none;display:flex;justify-content:space-between;align-items:center;gap:14px;
+    padding:16px 2px;font-size:13.5px;font-weight:700;cursor:pointer;
+  }
+  .faq-item summary::-webkit-details-marker{display:none;}
+  .faq-item summary .chev{
+    flex:none;width:20px;height:20px;border-radius:50%;background:var(--paper);color:var(--blue);
+    display:flex;align-items:center;justify-content:center;font-size:12px;transition:transform .15s ease;
+  }
+  .faq-item[open] summary .chev{transform:rotate(45deg);}
+  .faq-a{font-size:12.5px;color:#3F4A63;line-height:1.6;margin:0 0 18px;max-width:680px;padding:0 2px;}
+
+  /* Interactive Modal Overlay */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(15,30,61,0.4); display: none; justify-content: center; align-items: center; z-index: 1000;
+  }
+  .modal {
+    background: #fff; padding: 28px; border-radius: 12px; max-width: 480px; width: 90%;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  }
+  .modal h3 { margin-top: 0; color: var(--ink); }
+  .modal p { font-size: 13px; color: #3F4A63; line-height: 1.5; }
+  .modal-btn {
+    background: var(--blue); color: #fff; border: none; padding: 8px 16px; border-radius: 6px;
+    font-size: 12px; font-weight: 600; cursor: pointer; float: right; margin-top: 14px;
+  }
+</style>
+</head>
+<body>
+<div class="device">
+  <div class="browser-bar">
+    <div class="dots"><span></span><span></span><span></span></div>
+    <div class="url-pill">app.investmentintelligence.com/dashboard</div>
+  </div>
+
+  <div class="screen">
+    <div class="app-header">
+      <div class="app-brand">Investment Intelligence</div>
+      <div class="app-nav">
+        <span onclick="triggerSearch()">Search</span>
+        <span onclick="alert('3 new alerts: Strategy allocation updated, Q3 review added.')">Notifications</span>
+        <span onclick="openModal('Help & Support', 'Need assistance? Reach our institutional support team directly at support@investmentintelligence.com')">Help</span>
+        <span class="avatar">A</span>
+      </div>
+    </div>
+
+    <div class="body-grid">
+      <div class="main">
+        <p class="welcome-title">Good morning, Alex</p>
+        <p class="welcome-sub">Here's an overview of your investment portfolio.</p>
+
+        <div class="metric-row">
+          <div class="metric-card"><div class="lbl">Total portfolio</div><div class="val" id="valPortfolio">$2.84B</div></div>
+          <div class="metric-card"><div class="lbl">Total strategies</div><div class="val">24</div></div>
+          <div class="metric-card"><div class="lbl">Investment managers</div><div class="val">38</div></div>
+          <div class="metric-card"><div class="lbl">Documents</div><div class="val">1,248</div></div>
+        </div>
+
+        <h3 class="section">Portfolio overview</h3>
+        <div class="chart-block">
+          <div class="chart-top">
+            <span style="font-size:12px;color:#6B6656;">Portfolio value over time</span>
+            <div class="toggle-group" id="timeframeToggles">
+              <span class="toggle" onclick="updateChart('1M', this)">1M</span>
+              <span class="toggle" onclick="updateChart('3M', this)">3M</span>
+              <span class="toggle" onclick="updateChart('6M', this)">6M</span>
+              <span class="toggle active" onclick="updateChart('1Y', this)">1Y</span>
+              <span class="toggle" onclick="updateChart('3Y', this)">3Y</span>
+            </div>
+          </div>
+          <svg viewBox="0 0 700 130" width="100%" height="130" preserveAspectRatio="none">
+            <polyline id="chartLine" points="0,110 70,105 140,95 210,100 280,80 350,85 420,60 490,65 560,40 630,35 700,15"
+              fill="none" stroke="#1B3F91" stroke-width="2.5"/>
+            <polygon id="chartArea" points="0,110 70,105 140,95 210,100 280,80 350,85 420,60 490,65 560,40 630,35 700,15 700,130 0,130"
+              fill="#1B3F91" opacity="0.08"/>
+          </svg>
+        </div>
+
+        <h3 class="section">Asset allocation</h3>
+        <div class="alloc-bar">
+          <span style="width:42%;background:#1B3F91;"></span>
+          <span style="width:28%;background:#5089BE;"></span>
+          <span style="width:18%;background:#C1522A;"></span>
+          <span style="width:12%;background:#C7C3B3;"></span>
+        </div>
+        <div class="alloc-legend">
+          <span><i style="background:#1B3F91;"></i>Equities 42%</span>
+          <span><i style="background:#5089BE;"></i>Fixed Income 28%</span>
+          <span><i style="background:#C1522A;"></i>Alternatives 18%</span>
+          <span><i style="background:#C7C3B3;"></i>Cash 12%</span>
+        </div>
+      </div>
+
+      <div class="side">
+        <h4>Recent activity</h4>
+        <div class="activity-item" onclick="openModal('Quarterly Report', 'Quarterly portfolio performance report added for Q2 2026.')"><span class="activity-dot"></span>Quarterly portfolio report added</div>
+        <div class="activity-item" onclick="openModal('Manager Review', 'Manager review completed for Meridian Capital Fixed Income strategy.')"><span class="activity-dot"></span>Manager review completed</div>
+        <div class="activity-item" onclick="openModal('New Disclosures', '3 new regulatory and disclosure documents available in repository.')"><span class="activity-dot"></span>3 new documents available</div>
+        <div class="activity-item" onclick="openModal('Allocation Update', 'Portfolio rebalancing complete: Equities increased to 42%.')"><span class="activity-dot"></span>Portfolio allocation updated</div>
+
+        <div class="note"><b>Design decision:</b> surface high-level portfolio information first. Detailed analysis remains one level deeper.</div>
+      </div>
+    </div>
+
+    <div class="screen-section">
+      <h2>Manager directory</h2>
+      <p class="section-note">Move from portfolio → manager → fund → documents → research without jumping between systems.</p>
+      
+      <div class="manager-filter">
+        <span class="filter-btn active" onclick="filterManagers('all', this)">All Strategies</span>
+        <span class="filter-btn" onclick="filterManagers('equity', this)">Global Equity</span>
+        <span class="filter-btn" onclick="filterManagers('fixed', this)">Fixed Income</span>
+        <span class="filter-btn" onclick="filterManagers('private', this)">Private Markets</span>
+      </div>
+
+      <div class="manager-grid" id="managerGrid">
+        <div class="manager-card" data-cat="equity">
+          <p class="m-name">Northstar Asset Management</p>
+          <p class="m-strategy">Global Equity</p>
+          <div class="m-row"><span>Allocated</span><b>$486M</b></div>
+          <div class="m-row"><span>1Y return</span><b class="m-return">12.8%</b></div>
+          <span class="m-link" onclick="openModal('Northstar Asset Management', 'Strategy: Global Equity\nTotal Allocated: $486M\n1Y Return: +12.8%\n\nNavigating to full manager deep dive...')">View manager →</span>
+        </div>
+        <div class="manager-card" data-cat="fixed">
+          <p class="m-name">Meridian Capital</p>
+          <p class="m-strategy">Fixed Income</p>
+          <div class="m-row"><span>Allocated</span><b>$312M</b></div>
+          <div class="m-row"><span>1Y return</span><b class="m-return">7.4%</b></div>
+          <span class="m-link" onclick="openModal('Meridian Capital', 'Strategy: Fixed Income\nTotal Allocated: $312M\n1Y Return: +7.4%\n\nNavigating to full manager deep dive...')">View manager →</span>
+        </div>
+        <div class="manager-card" data-cat="private">
+          <p class="m-name">Atlas Alternatives</p>
+          <p class="m-strategy">Private Markets</p>
+          <div class="m-row"><span>Allocated</span><b>$208M</b></div>
+          <div class="m-row"><span>1Y return</span><b class="m-return">9.6%</b></div>
+          <span class="m-link" onclick="openModal('Atlas Alternatives', 'Strategy: Private Markets\nTotal Allocated: $208M\n1Y Return: +9.6%\n\nNavigating to full manager deep dive...')">View manager →</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-section">
+      <h2>Market insights</h2>
+      <p class="section-note">Curated commentary and research surfaced alongside the portfolio, so users move from data to context without leaving the platform.</p>
+      <div class="insight-grid">
+        <div class="insight-card" onclick="openModal('Global Equities Insight', 'Full article: What is driving the Q3 Rally?\n\nAuthored by Northstar Asset Management (6 min read).\n\nKey takeaways: Strong earnings in tech and steady corporate margins buffered overall returns despite macro volatility.')">
+          <div class="insight-thumb"></div>
+          <div class="insight-body">
+            <p class="insight-tag">MARKET COMMENTARY</p>
+            <p class="insight-title">Global equities: what's driving the Q3 rally</p>
+            <p class="insight-meta">Northstar Asset Management · 6 min read</p>
+          </div>
+        </div>
+        <div class="insight-card" onclick="openModal('Fixed Income Insight', 'Full article: Rate expectations & portfolio impact.\n\nAuthored by Meridian Capital (4 min read).\n\nKey takeaways: Short-duration yields remain stable while long-term positioning offers hedge capabilities.')">
+          <div class="insight-thumb alt"></div>
+          <div class="insight-body">
+            <p class="insight-tag">FIXED INCOME</p>
+            <p class="insight-title">Rate expectations and what they mean for portfolios</p>
+            <p class="insight-meta">Meridian Capital · 4 min read</p>
+          </div>
+        </div>
+        <div class="insight-card" onclick="openModal('Alternatives Insight', 'Full article: Private Markets next wave.\n\nAuthored by Atlas Alternatives (5 min read).\n\nKey takeaways: Secondary opportunities and infrastructure investments lead private market allocations this quarter.')">
+          <div class="insight-thumb alt2"></div>
+          <div class="insight-body">
+            <p class="insight-tag">ALTERNATIVES</p>
+            <p class="insight-title">Private markets: where allocators are looking next</p>
+            <p class="insight-meta">Atlas Alternatives · 5 min read</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-section">
+      <h2>FAQs</h2>
+      <p class="section-note">Common questions from investment professionals evaluating the platform.</p>
+      <details class="faq-item" open>
+        <summary>How often is portfolio and manager data refreshed?<span class="chev">+</span></summary>
+        <p class="faq-a">Portfolio values, allocations, and manager performance figures update on a daily basis, with source documents refreshed as new filings and commentary become available.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Can I export a fund or manager view as a report?<span class="chev">+</span></summary>
+        <p class="faq-a">Any fund profile, manager summary, or document set can be exported as a PDF for offline review or client sharing directly from its detail screen.</p>
+      </details>
+      <details class="faq-item">
+        <summary>How is my portfolio information secured?<span class="chev">+</span></summary>
+        <p class="faq-a">Data is encrypted in transit and at rest, and every session requires verified authentication - the same protections carried through from the platform's secure access flow.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Does the AI summary replace my own analysis?<span class="chev">+</span></summary>
+        <p class="faq-a">No - every AI-generated summary or search result links back to its source document, so it supports your judgement rather than substituting for it.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Who can I contact if a manager or fund is missing?<span class="chev">+</span></summary>
+        <p class="faq-a">Reach the platform support team through the Help menu in the header, available from any screen.</p>
+      </details>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Container -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h3 id="modalTitle">Modal Title</h3>
+    <p id="modalBody" style="white-space: pre-line;">Modal details go here...</p>
+    <button class="modal-btn" onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<script>
+  // SVG Chart Datasets
+  const chartDatasets = {
+    '1M': {
+      line: "0,80 140,85 280,75 420,70 560,65 700,60",
+      area: "0,80 140,85 280,75 420,70 560,65 700,60 700,130 0,130",
+      val: "$2.84B"
+    },
+    '3M': {
+      line: "0,100 140,90 280,95 420,70 560,50 700,30",
+      area: "0,100 140,90 280,95 420,70 560,50 700,30 700,130 0,130",
+      val: "$2.81B"
+    },
+    '6M': {
+      line: "0,115 140,100 280,85 420,75 560,45 700,25",
+      area: "0,115 140,100 280,85 420,75 560,45 700,25 700,130 0,130",
+      val: "$2.78B"
+    },
+    '1Y': {
+      line: "0,110 70,105 140,95 210,100 280,80 350,85 420,60 490,65 560,40 630,35 700,15",
+      area: "0,110 70,105 140,95 210,100 280,80 350,85 420,60 490,65 560,40 630,35 700,15 700,130 0,130",
+      val: "$2.84B"
+    },
+    '3Y': {
+      line: "0,125 140,110 280,80 420,55 560,30 700,10",
+      area: "0,125 140,110 280,80 420,55 560,30 700,10 700,130 0,130",
+      val: "$2.62B"
+    }
+  };
+
+  function updateChart(timeframe, element) {
+    document.querySelectorAll('#timeframeToggles .toggle').forEach(el => el.classList.remove('active'));
+    element.classList.add('active');
+
+    const data = chartDatasets[timeframe];
+    document.getElementById('chartLine').setAttribute('points', data.line);
+    document.getElementById('chartArea').setAttribute('points', data.area);
+    document.getElementById('valPortfolio').innerText = data.val;
+  }
+
+  function filterManagers(category, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const cards = document.querySelectorAll('#managerGrid .manager-card');
+    cards.forEach(card => {
+      if (category === 'all' || card.getAttribute('data-cat') === category) {
+        card.style.display = 'block';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+  }
+
+  // Modal Functions
+  function openModal(title, body) {
+    document.getElementById('modalTitle').innerText = title;
+    document.getElementById('modalBody').innerText = body;
+    document.getElementById('modalOverlay').style.display = 'flex';
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').style.display = 'none';
+  }
+
+  function triggerSearch() {
+    const query = prompt("Search platform (e.g., 'Meridian', 'Equities', 'Q3'):");
+    if (query) {
+      alert(`Filtering dashboard views for query: "${query}"`);
+    }
+  }
+</script>
+</body>
+</html>

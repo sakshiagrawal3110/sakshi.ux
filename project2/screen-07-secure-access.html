@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Secure Access - Screen Mockup</title>
+<style>
+  :root{
+    --ink:#0F1E3D;
+    --paper:#F7F5F0;
+    --line:#E4E0D6;
+    --blue:#1B3F91;
+    --blue-light:#EDF1FB;
+    --green:#1E7A46;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#DAD6C9;
+    font-family:'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    color:var(--ink);
+    padding:40px;
+  }
+  .device{
+    max-width:1180px;margin:0 auto;background:#fff;border-radius:14px;
+    box-shadow:0 20px 60px rgba(15,30,61,.18);overflow:hidden;
+  }
+  .browser-bar{display:flex;align-items:center;gap:14px;padding:12px 18px;background:#EDEAE2;border-bottom:1px solid var(--line);}
+  .dots{display:flex;gap:6px;}
+  .dots span{width:10px;height:10px;border-radius:50%;background:#C9C4B4;}
+  .url-pill{flex:1;background:#fff;border-radius:6px;padding:5px 14px;font-size:11.5px;color:#8A8474;}
+
+  .screen{background:var(--paper);}
+  .app-header{display:flex;justify-content:space-between;align-items:center;padding:16px 32px;background:#fff;border-bottom:1px solid var(--line);}
+  .app-brand{font-size:14.5px;font-weight:700;}
+  .app-nav{font-size:12.5px;color:#8A8474;}
+
+  .stage{
+    min-height:620px;
+    display:flex;align-items:center;justify-content:center;
+    padding:60px 32px;
+  }
+
+  .card{
+    width:380px;background:#fff;border:1px solid var(--line);border-radius:12px;
+    padding:44px 36px 36px;text-align:center;
+    box-shadow:0 10px 30px rgba(15,30,61,.06);
+  }
+
+  .lock-badge{
+    width:52px;height:52px;border-radius:50%;
+    background:var(--blue);color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:20px;margin:0 auto 20px;
+  }
+
+  .title{font-size:12px;font-weight:700;letter-spacing:.05em;color:var(--blue);margin:0 0 10px;text-transform:uppercase;}
+  .welcome{font-size:19px;font-weight:700;margin:0 0 8px;}
+  .sub{font-size:12.5px;color:#6B6656;margin:0 0 30px;line-height:1.5;}
+
+  .touch-id{
+    width:60px;height:60px;border-radius:50%;
+    border:2px solid var(--blue);color:var(--blue);
+    display:flex;align-items:center;justify-content:center;
+    font-size:24px;margin:0 auto 18px;
+    transition:background .15s, color .15s;
+  }
+  .touch-id.pulsing{background:var(--blue);color:#fff;animation:pulse 1s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.08);}}
+
+  .btn-primary{
+    width:100%;background:var(--blue);color:#fff;border:none;border-radius:8px;
+    padding:12px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:14px;
+  }
+  .btn-primary:disabled{opacity:.7;cursor:default;}
+
+  .pw-input{
+    width:100%;border:1px solid var(--line);border-radius:8px;
+    padding:11px 14px;font-size:13px;margin-bottom:14px;outline:none;
+    color:var(--ink);box-sizing:border-box;
+  }
+  .pw-input:focus{border-color:var(--blue);}
+
+  .divider-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .divider-row .line{flex:1;height:1px;background:var(--line);}
+  .divider-row span{font-size:11px;color:#9C978A;}
+
+  .link-btn{background:none;border:none;color:var(--blue);font-size:12.5px;font-weight:600;cursor:pointer;margin-bottom:30px;}
+
+  .trust-list{text-align:left;}
+  .trust-item{display:flex;gap:12px;padding:14px 0;border-top:1px solid var(--line);}
+  .trust-item:last-child{padding-bottom:0;}
+  .trust-icon{
+    width:32px;height:32px;border-radius:8px;flex:none;
+    background:var(--paper);border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;font-size:14px;
+  }
+  .trust-title{font-size:12px;font-weight:700;margin:0 0 3px;}
+  .trust-desc{font-size:11px;color:#6B6656;line-height:1.5;}
+
+  .success-badge{
+    width:52px;height:52px;border-radius:50%;background:var(--green);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 18px;
+  }
+  .success-text{font-size:15px;font-weight:700;margin:0 0 6px;}
+  .success-sub{font-size:12px;color:#6B6656;}
+
+  .state{display:none;}
+  .state.active{display:block;}
+
+  .research-note{
+    max-width:640px;margin:0 auto;padding:20px 32px 40px;
+    font-size:12px;color:#3F4A63;line-height:1.6;text-align:center;
+  }
+  .research-note b{color:var(--blue);}
+</style>
+</head>
+<body>
+<div class="device">
+  <div class="browser-bar">
+    <div class="dots"><span></span><span></span><span></span></div>
+    <div class="url-pill">app.investmentintelligence.com/secure-access</div>
+  </div>
+
+  <div class="screen">
+    <div class="app-header">
+      <div class="app-brand">Investment Intelligence</div>
+      <div class="app-nav">Need help? Contact support</div>
+    </div>
+
+    <div class="stage">
+      <div class="card">
+
+        <div class="state active" id="stateTouchId">
+          <div class="lock-badge">🔒</div>
+          <p class="title">Secure access</p>
+          <p class="welcome">Welcome back, Alex</p>
+          <p class="sub">Your investment information is protected.</p>
+
+          <div class="touch-id" id="touchIdCircle">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+              <path d="M12 4.5c-2.2 0-4.2.8-5.8 2.1"/>
+              <path d="M17.8 6.6C16.2 5.3 14.2 4.5 12 4.5"/>
+              <path d="M4.8 9.2C4.3 10.3 4 11.6 4 12.9c0 1.6.3 3.1.9 4.5"/>
+              <path d="M19.1 17.4c.6-1.4.9-2.9.9-4.5 0-1.3-.3-2.6-.8-3.7"/>
+              <path d="M8.2 20.3c-1-.6-1.9-1.4-2.6-2.3"/>
+              <path d="M18.4 18c-.7.9-1.6 1.7-2.6 2.3"/>
+              <path d="M7.5 10.2c1-1.1 2.7-1.9 4.5-1.9s3.5.8 4.5 1.9"/>
+              <path d="M6.9 14.6c-.2-.6-.3-1.2-.3-1.9 0-2.9 2.4-5.2 5.4-5.2s5.4 2.3 5.4 5.2c0 .7-.1 1.3-.3 1.9"/>
+              <path d="M9 20.6c-.6-1.4-1-3-1-4.6 0-.7.1-1.3.3-1.9"/>
+              <path d="M15 20.6c.6-1.4 1-3 1-4.6 0-.7-.1-1.3-.3-1.9"/>
+              <path d="M12 21c-.9-2-1.4-4.2-1.4-6.4 0-1.4 1-2.4 2.4-2.4"/>
+              <path d="M13 12.2c1.4 0 2.4 1 2.4 2.4 0 2.2-.5 4.4-1.4 6.4"/>
+            </svg>
+          </div>
+          <button class="btn-primary" id="touchIdBtn">Continue with Touch ID</button>
+
+          <div class="divider-row"><span class="line"></span><span>or</span><span class="line"></span></div>
+          <button class="link-btn" id="usePasswordBtn">Use password instead</button>
+
+          <div class="trust-list">
+            <div class="trust-item">
+              <div class="trust-icon">🔒</div>
+              <div>
+                <p class="trust-title">Encrypted data</p>
+                <p class="trust-desc">Your information is protected during transmission and storage.</p>
+              </div>
+            </div>
+            <div class="trust-item">
+              <div class="trust-icon">🔐</div>
+              <div>
+                <p class="trust-title">Secure authentication</p>
+                <p class="trust-desc">Access requires verified authentication.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="state" id="statePassword">
+          <div class="lock-badge">🔒</div>
+          <p class="title">Secure access</p>
+          <p class="welcome">Welcome back, Alex</p>
+          <p class="sub">Enter your password to continue.</p>
+
+          <input type="password" class="pw-input" placeholder="Password" />
+          <button class="btn-primary" id="passwordSubmitBtn">Sign in</button>
+          <button class="link-btn" id="useTouchIdBtn">Use Touch ID instead</button>
+        </div>
+
+        <div class="state" id="stateSuccess">
+          <div class="success-badge">✓</div>
+          <p class="success-text">Access granted</p>
+          <p class="success-sub">Redirecting to your dashboard…</p>
+        </div>
+
+      </div>
+    </div>
+
+    <p class="research-note"><b>Research finding:</b> users were initially sceptical about sensitive financial information being available through the platform. Showing security mechanisms up front helped make the experience feel more trustworthy.</p>
+  </div>
+</div>
+
+<script>
+  const stateTouchId = document.getElementById('stateTouchId');
+  const statePassword = document.getElementById('statePassword');
+  const stateSuccess = document.getElementById('stateSuccess');
+
+  function showState(el){
+    [stateTouchId, statePassword, stateSuccess].forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  document.getElementById('usePasswordBtn').addEventListener('click', () => showState(statePassword));
+  document.getElementById('useTouchIdBtn').addEventListener('click', () => showState(stateTouchId));
+
+  function authenticate(){
+    showState(stateSuccess);
+    setTimeout(() => showState(stateTouchId), 2200);
+  }
+
+  document.getElementById('touchIdBtn').addEventListener('click', () => {
+    const circle = document.getElementById('touchIdCircle');
+    const btn = document.getElementById('touchIdBtn');
+    circle.classList.add('pulsing');
+    btn.disabled = true;
+    btn.textContent = 'Authenticating…';
+    setTimeout(() => {
+      circle.classList.remove('pulsing');
+      btn.disabled = false;
+      btn.textContent = 'Continue with Touch ID';
+      authenticate();
+    }, 1100);
+  });
+
+  document.getElementById('passwordSubmitBtn').addEventListener('click', authenticate);
+</script>
+</body>
+</html>

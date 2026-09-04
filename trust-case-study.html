@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Designing Trust in the Age of AI | Case Study</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* 1. Enable Cross-Document View Transitions (Modern Spec) */
+    @view-transition {
+      navigation: auto;
+    }
+
+    /* 2. Global Spring Timing */
+    ::view-transition-group(*) {
+      animation-duration: 0.6s;
+      animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* 3. Force the expanding card to fly OVER the rest of the page */
+    ::view-transition-group(hero-agentic),
+    ::view-transition-group(hero-trust),
+    ::view-transition-group(hero-research),
+    ::view-transition-group(hero-clinical) {
+      z-index: 9999;
+    }
+
+    /* 4. The Framer Fix: Prevent text/images from stretching by acting as a cover crop */
+    ::view-transition-old(hero-agentic),
+    ::view-transition-new(hero-agentic),
+    ::view-transition-old(hero-trust),
+    ::view-transition-new(hero-trust),
+    ::view-transition-old(hero-research),
+    ::view-transition-new(hero-research),
+    ::view-transition-old(hero-clinical),
+    ::view-transition-new(hero-clinical) {
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      object-position: center;
+      border-radius: inherit;
+      mix-blend-mode: normal;
+    }
+
+    /* 5. Speed up the background page crossfade so it drops in smoothly behind the card */
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+      animation-duration: 0.25s;
+    }
+
+    /* ==========================================================================
+       1. GLOBAL DESIGN SYSTEM & THEME
+       ========================================================================== */
+    :root {
+      --bg-color: #f4f4f5;
+      --text-main: #18181b;
+      --text-muted: #71717a;
+      --text-body: #3f3f46;
+      --border-color: #e4e4e7;
+      --panel-bg: #ffffff;
+      --panel-subtle: rgba(0, 0, 0, 0.025);
+      --panel-border: rgba(0, 0, 0, 0.03);
+      --glass-bg: rgba(255, 255, 255, 0.45);
+      --glass-border: rgba(255, 255, 255, 0.6);
+      --transition-apple: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+      --spring-easing: cubic-bezier(0.16, 1, 0.3, 1);
+      --cursor-default: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.65 2.15c-.25-.25-.65-.07-.65.28v18.08c0 .39.48.56.73.26l4.07-4.91c.11-.14.28-.22.45-.22h6.64c.38 0 .55-.47.27-.75L5.65 2.15z' fill='%2318181b' stroke='%23ffffff' stroke-width='1.5'/%3E%3C/svg%3E") 4 4, auto;
+      --cursor-text: url("data:image/svg+xml,%3Csvg width='12' height='24' viewBox='0 0 12 24' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='5' y='3' width='1.5' height='18' fill='%2318181b'/%3E%3C/svg%3E") 6 12, text;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --text-main: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --text-body: #d4d4d8;
+      --border-color: #3f3f46;
+      --panel-bg: #1e1e1e;
+      --panel-subtle: rgba(255, 255, 255, 0.06);
+      --panel-border: rgba(255, 255, 255, 0.1);
+      --glass-bg: rgba(30, 30, 30, 0.72);
+      --glass-border: rgba(255, 255, 255, 0.16);
+      --cursor-default: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.65 2.15c-.25-.25-.65-.07-.65.28v18.08c0 .39.48.56.73.26l4.07-4.91c.11-.14.28-.22.45-.22h6.64c.38 0 .55-.47.27-.75L5.65 2.15z' fill='%23f4f4f5' stroke='%2318181b' stroke-width='1.5'/%3E%3C/svg%3E") 4 4, auto;
+      --cursor-text: url("data:image/svg+xml,%3Csvg width='12' height='24' viewBox='0 0 12 24' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='5' y='3' width='1.5' height='18' fill='%23f4f4f5'/%3E%3C/svg%3E") 6 12, text;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; cursor: var(--cursor-default); }
+    html, body { cursor: var(--cursor-default); }
+    h1, h2, h3, h4, h5, h6, p, span, li, input, textarea { cursor: var(--cursor-text); }
+    a, button, .toggle-btn, .close-btn { cursor: pointer; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body[data-theme="dark"] {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(67, 83, 115, 0.28), transparent 34rem),
+        radial-gradient(circle at 8% 48%, rgba(42, 53, 74, 0.2), transparent 28rem),
+        var(--bg-color);
+    }
+
+    .case-study-container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 100px 24px 80px;
+      position: relative;
+    }
+
+    /* --- Hero Element --- */
+    .hero-image {
+      view-transition-name: hero-trust;
+      width: 100%;
+      height: 460px;
+      background: linear-gradient(135deg, #0F1E3D, #1B3F91);
+      border-radius: 40px;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      contain: paint;
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      color: #ffffff;
+      padding: 2rem;
+      width: 100%;
+      z-index: 2;
+    }
+
+    .hero-title { font-size: 3.5rem; font-weight: 600; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+    .hero-subtitle { font-size: 1.25rem; font-weight: 400; margin-bottom: 1.5rem; opacity: 0.95; }
+    .hero-divider { width: 100%; max-width: 560px; height: 1px; background-color: rgba(255, 255, 255, 0.3); }
+
+    /* --- Floating UI --- */
+    .close-btn {
+      position: fixed; top: 2rem; right: 2rem; width: 48px; height: 48px;
+      background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border); border-radius: 50%;
+      display: flex; justify-content: center; align-items: center;
+      color: var(--text-main); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      transition: var(--transition-apple); z-index: 1000; text-decoration: none;
+    }
+    .close-btn:hover { transform: scale(1.08); background: rgba(255, 255, 255, 0.85); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); }
+    [data-theme="dark"] .close-btn:hover { background: rgba(63, 63, 70, 0.9); }
+
+    .toggle-wrapper {
+      position: fixed; top: 1.75rem; left: 50%; transform: translateX(-50%);
+      z-index: 999; display: flex; justify-content: center; pointer-events: none;
+    }
+    .glass-toggle {
+      pointer-events: auto; position: relative; display: flex; align-items: center;
+      background: rgba(255, 255, 255, 0.65); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 99px; padding: 5px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), inset 0 1px 1px rgba(255, 255, 255, 1);
+    }
+    [data-theme="dark"] .glass-toggle {
+      background: rgba(30, 30, 30, 0.48); border-color: rgba(255, 255, 255, 0.26);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.36), inset 0 1px 1px rgba(255, 255, 255, 0.08);
+    }
+    .toggle-slider {
+      position: absolute; top: 5px; left: 5px; width: calc(50% - 5px); height: calc(100% - 10px);
+      background: #ffffff; border-radius: 99px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1); z-index: 1;
+    }
+    [data-theme="dark"] .toggle-slider {
+      background: rgba(82, 91, 108, 0.72); border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    }
+    .glass-toggle.tldr-active .toggle-slider { transform: translateX(100%); }
+    .toggle-btn {
+      position: relative; z-index: 2; background: none; border: none; padding: 9px 30px;
+      font-family: inherit; font-size: 0.95rem; font-weight: 500; color: var(--text-muted); width: 125px; transition: color 0.3s ease;
+    }
+    .toggle-btn.active { color: var(--text-main); font-weight: 600; }
+    .toggle-btn:hover:not(.active) { color: #3f3f46; }
+    [data-theme="dark"] .toggle-btn:hover:not(.active) { color: #f4f4f5; }
+
+    /* --- Narrative Typography & Layout --- */
+    .content-area { width: 100%; position: relative; }
+    .content-section { display: none; opacity: 0; transform: translateY(12px); transition: opacity 0.45s ease, transform 0.45s ease; }
+    .content-section.active { display: block; opacity: 1; transform: translateY(0); }
+    
+    .content-section h1 { font-size: 2.25rem; line-height: 1.3; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 1.5rem; color: var(--text-main); }
+    .content-section h2 { font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-main); letter-spacing: -0.01em; }
+    .content-section p { font-size: 1.125rem; line-height: 1.7; color: var(--text-body); margin-bottom: 1.5rem; }
+    .section-title { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: #165EDA; font-weight: 600; margin-bottom: 0.5rem; margin-top: 3.5rem; display: block; }
+    [data-theme="dark"] .section-title { color: #60A5FA; }
+
+    .meta-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 2rem 0 3rem; padding: 1.5rem; background: var(--panel-subtle); border-radius: 16px; border: 1px solid var(--panel-border); }
+    .meta-item h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); margin-bottom: 0.25rem; }
+    .meta-item p { font-size: 0.95rem; font-weight: 500; margin-bottom: 0 !important; color: var(--text-main); }
+
+    /* TLDR Layout */
+    .tldr-list { list-style: none; margin-bottom: 2.5rem; }
+    .tldr-list li { font-size: 1.125rem; line-height: 1.7; color: var(--text-body); margin-bottom: 1.25rem; padding-left: 1.5rem; position: relative; }
+    .tldr-list li::before { content: ''; position: absolute; left: 0; top: 10px; width: 6px; height: 6px; background-color: var(--text-main); border-radius: 50%; }
+    .tldr-list strong { color: var(--text-main); font-weight: 600; }
+    .impact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .impact-card { background: var(--panel-bg); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02); }
+    .impact-card h3 { font-size: 1.5rem; color: #1B3F91; margin-bottom: 0.5rem; }
+    [data-theme="dark"] .impact-card h3 { color: #8ab4ff; }
+    .impact-card p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 0; }
+
+    /* ==========================================================================
+       2. IFRAME MOCKUP CONTAINERS
+       ========================================================================== */
+    .iframe-wrapper {
+      margin: 4rem -100px; /* Bleeds out of text column for impact */
+      border-radius: 24px;
+      overflow: hidden;
+      background: #DAD6C9; /* Matches the body background of the mockups */
+    }
+
+    .iframe-wrapper iframe {
+      width: 100%;
+      height: 800px;
+      border: none;
+      display: block;
+    }
+
+    /* Adjust height for shorter screens if desired */
+    .iframe-wrapper.short-frame iframe {
+      height: 600px; 
+    }
+
+    /* Responsive Overrides */
+    @media (max-width: 1024px) {
+      .case-study-container { padding-top: 90px; }
+      .iframe-wrapper { margin: 3rem -24px; border-radius: 0; }
+      .meta-grid, .impact-grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: 2.25rem; }
+      .hero-subtitle { font-size: 1rem; margin-bottom: 1.25rem; }
+      .hero-divider { max-width: 85%; }
+    }
+    /* Homepage-inspired motion applied to the case-study shell. */
+    .hero-image { transition: transform 0.7s var(--spring-easing), box-shadow 0.7s var(--spring-easing); will-change: transform, box-shadow; }
+    .hero-image:hover { transform: translateY(-6px) scale(1.01); box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12); }
+    .hero-content { animation: content-rise 0.8s 0.12s var(--spring-easing) both; }
+    .close-btn:active { transform: scale(0.92); transition: transform 0.1s ease; }
+    .meta-grid { animation: content-rise 0.7s 0.24s var(--spring-easing) both; }
+    .meta-item { transition: transform 0.4s var(--spring-easing); }
+    .meta-item:hover { transform: translateY(-3px); }
+    .content-section.active > * { animation: content-rise 0.65s var(--spring-easing) both; }
+    .content-section.active > *:nth-child(2) { animation-delay: 0.06s; }
+    .content-section.active > *:nth-child(3) { animation-delay: 0.12s; }
+    .content-section.active > *:nth-child(4) { animation-delay: 0.18s; }
+    .iframe-wrapper { transition: transform 0.6s var(--spring-easing), box-shadow 0.6s var(--spring-easing); will-change: transform, box-shadow; }
+    .iframe-wrapper:hover { transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12); }
+    @keyframes content-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Navigation Controls (Shrink / Minimize) -->
+  <a href="index.html" class="close-btn" aria-label="Minimize or go back">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <!-- Top-right corner inward -->
+      <path d="M15 3v6h6" />
+      <!-- Bottom-left corner inward -->
+      <path d="M9 21v-6H3" />
+      <!-- Diagonal arrow from top-right to center -->
+      <path d="M21 3l-7 7" />
+      <!-- Diagonal arrow from bottom-left to center -->
+      <path d="M3 21l7-7" />
+    </svg>
+  </a>
+
+  <div class="toggle-wrapper">
+    <div class="glass-toggle" id="view-toggle">
+      <div class="toggle-slider"></div>
+      <button class="toggle-btn active" data-target="detailed">Detailed</button>
+      <button class="toggle-btn" data-target="tldr">TL;DR</button>
+    </div>
+  </div>
+
+  <main class="case-study-container">
+    
+    <!-- Hero Section -->
+    <div class="hero-image">
+      <div class="hero-content">
+        <h1 class="hero-title">Investment Intelligence</h1>
+        <p class="hero-subtitle">Designing trust in the age of AI</p>
+        <div class="hero-divider"></div>
+      </div>
+    </div>
+
+    <div class="content-area">
+      <!-- =========================================================
+           DETAILED VIEW
+           ========================================================= -->
+      <article id="detailed" class="content-section active">
+        
+        <p>A confidential client investment technology and portfolio analytics platform designed to bring portfolio information, investment managers, documents and intelligent insights into one secure experience for institutional investors.</p>
+        <p>The platform was designed to give clients a single place to understand their investments, access supporting information and interact with their portfolio data-while maintaining the level of trust expected when working with highly sensitive financial information.</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted); font-style: italic;">Confidential project: Product name, proprietary data, financial figures and production screens have been anonymised.</p>
+
+        <div class="meta-grid">
+          <div class="meta-item">
+            <h4>My Role</h4>
+            <p>Senior UX Designer</p>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem !important;">UX strategy → Architecture → Interaction design → Visual hierarchy → Prototyping → User testing</p>
+          </div>
+          <div class="meta-item">
+            <h4>Impact</h4>
+            <p>One secure experience</p>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem !important;">Designed around trust, making complex financial data scannable, and introducing AI without replacing professional expertise.</p>
+          </div>
+        </div>
+
+        <span class="section-title">Problem</span>
+        <h2>More information didn't mean a better experience.</h2>
+        <p>Investment professionals were accustomed to working across multiple sources to access information about their portfolios, investment managers and supporting documents. The opportunity was to bring these experiences together into one secure platform.</p>
+        <p>But consolidation introduced a new problem. The platform could potentially contain an enormous amount of financial information. Simply putting everything in one place would create another fragmented experience-just inside a single product. The challenge became: <strong>How might we make complex investment information easier to understand without taking away the depth that professionals need?</strong></p>
+
+        <span class="section-title">Turning Point</span>
+        <h2>Trust had to come before intelligence.</h2>
+        <p>Early UserTesting helped us understand an important barrier. Users were interested in the value of having their information consolidated, but there was hesitation around putting sensitive investment data into a single digital environment.</p>
+        <p>The response became more positive when users could see how the platform protected their information, rather than simply being told that it was secure. This led to an important design principle: <strong>Don't ask users to trust the AI before they trust the platform.</strong></p>
+
+        <!-- MOCKUP 1: SECURE ACCESS (IFRAME) -->
+        <div class="iframe-wrapper short-frame">
+          <iframe src="project2/screen-07-secure-access.html" title="Secure Access Mockup" scrolling="yes"></iframe>
+        </div>
+
+        <span class="section-title">Product Strategy</span>
+        <h2>AI that assists, rather than decides.</h2>
+        <p>AI was intentionally introduced as an augmentation layer rather than the centre of the product. Through interviews with investment managers and subject-matter experts, we identified areas where AI could reduce effort without interfering with professional judgement.</p>
+        <p>The interaction model remained deliberately human-led: <strong>AI surfaces information → User evaluates it → Professional applies judgement.</strong> This distinction was especially important in an environment where users were dealing with highly consequential financial information.</p>
+
+        <!-- MOCKUP 2: DOCUMENTS (IFRAME) -->
+        <div class="iframe-wrapper">
+          <iframe src="project2/screen-04-document-library.html" title="Document Library Mockup" scrolling="yes"></iframe>
+        </div>
+
+        <span class="section-title">Fund Profile</span>
+        <h2>Designing depth without overwhelming the user</h2>
+        <p>One of the most complex areas of the product was the fund profile. The initial business instinct was understandably to expose as much information as possible. But more information created more cognitive load.</p>
+        <p>We restructured the fund profile around hierarchy, scannability and progressive disclosure. Instead of presenting financial information as large blocks of text, we introduced stronger visual cues that allowed users to understand the overall picture before diving deeper.</p>
+
+        <!-- MOCKUP 3: FUND PROFILE (IFRAME) -->
+        <div class="iframe-wrapper">
+          <iframe src="project2/project 2-screen 1.html" title="Fund Profile Mockup" scrolling="yes"></iframe>
+        </div>
+
+        <span class="section-title">The Result</span>
+        <h2>From fragmented information to one trusted experience.</h2>
+        <p>The platform brought portfolio information, investment-manager details, documents, analytics and AI-assisted capabilities into one unified client experience.</p>
+        <p>The experience evolved from a potentially overwhelming collection of financial information into a structured platform where users could access the depth they needed without having to process everything at once.</p>
+
+        <!-- MOCKUP 4: DASHBOARD (IFRAME) -->
+        <div class="iframe-wrapper">
+          <iframe src="project2/project 2-screen 2.html" title="Dashboard Mockup" scrolling="yes"></iframe>
+        </div>
+
+        <p style="font-weight: 600; font-size: 1.25rem; text-align: center; margin-top: 4rem; color: var(--text-main);">In financial UX, trust isn't a feature. It's part of the experience.</p>
+      </article>
+
+      <!-- =========================================================
+           TL;DR VIEW
+           ========================================================= -->
+      <article id="tldr" class="content-section">
+        <h1>Designing Trust: The Short Version</h1>
+        <ul class="tldr-list">
+          <li><strong>The Problem:</strong> Institutional investors needed a single platform for their portfolio data, but consolidating dense financial information created overwhelming cognitive load and trust barriers.</li>
+          <li><strong>The Solution:</strong> We designed a secure, hierarchical experience that proved platform security upfront and utilized progressive disclosure to make dense financial data highly scannable.</li>
+          <li><strong>AI Strategy:</strong> We implemented AI strictly as an augmentation layer (search and summarization) that assists rather than replaces professional financial judgment.</li>
+        </ul>
+
+        <div class="impact-grid">
+          <div class="impact-card">
+            <h3>Unified Platform</h3>
+            <p>Portfolio data, managers, and documents brought into one seamless experience.</p>
+          </div>
+          <div class="impact-card">
+            <h3>Security First</h3>
+            <p>Trust mechanisms intentionally designed to address initial user skepticism.</p>
+          </div>
+          <div class="impact-card">
+            <h3>Cognitive Load</h3>
+            <p>Data visualized and layered for rapid scannability and progressive depth.</p>
+          </div>
+          <div class="impact-card">
+            <h3>Human-Led AI</h3>
+            <p>Intelligence layered carefully to assist, not override, the investment professional.</p>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </main>
+
+  <script>
+    // --- Global Theme Logic ---
+    const storedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (storedTheme === 'dark' || (!storedTheme && prefersDark)) {
+      document.body.setAttribute('data-theme', 'dark');
+    }
+
+    window.addEventListener('storage', (event) => {
+      if (event.key !== 'theme') return;
+      if (event.newValue === 'dark') {
+        document.body.setAttribute('data-theme', 'dark');
+      } else {
+        document.body.removeAttribute('data-theme');
+      }
+    });
+
+    // --- Toggle Logic (Detailed vs TL;DR) ---
+    const toggleContainer = document.getElementById('view-toggle');
+    const btns = document.querySelectorAll('.toggle-btn');
+    const sections = document.querySelectorAll('.content-section');
+
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        btns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        if(btn.dataset.target === 'tldr') {
+          toggleContainer.classList.add('tldr-active');
+        } else {
+          toggleContainer.classList.remove('tldr-active');
+        }
+
+        sections.forEach(sec => {
+          sec.classList.remove('active');
+          if(sec.id === btn.dataset.target) {
+            setTimeout(() => sec.classList.add('active'), 20);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
